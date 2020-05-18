@@ -1,0 +1,39 @@
+
+
+ok (11)    ▒▒6▒▒▒ 1
+               ▒▒ 2
+               ▒▒ 3
+               ▒▒ 4
+               ▒▒ 5
+               ▒▒ 6
+   (15)        ▒▒ 7
+ok (9)   ▒▒▒▒▒▒▒▒▒▒▒▒31▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 8	
+               ▒▒		   9
+               ▒▒		   10
+               ▒▒		   11
+               ▒▒	      ▒▒▒7▒▒▒ 12
+               ▒▒    (13)     ▒▒ 3 ▒▒ 13
+               ▒▒ (4)THE  (6) ▒▒▒  ▒▒ 14
+               ▒▒    BANKING  (7)  ▒▒ 15 
+               ▒▒(8)     APP       ▒▒ 16 
+               ▒▒           (18)   ▒▒ 17 
+               ▒▒(3)By ~ MehRaj (4)▒▒ 18 
+               ▒▒ 		   ▒▒ 19 
+	       ▒▒▒▒▒▒▒▒▒▒20▒▒▒▒▒▒▒▒▒▒ 20
+
+Algo >>> loop for i from 1 to 20:
+		if( i == 1 ) print (11 space + 6 char)
+		else if( i == 9 ) print (9 spaces + 31 char)
+		else{
+		print(15 spaces + 2 char)
+		if(i==12) print(13 spaces + 7 char)
+		else if(i==13) print(13 spaces + 2 char + 3 space + 2 char)
+		else if(i==14) print(4 spaces+ "THE" + 6 space + 3 char + 2 space + 2 char)
+		else if(i==15) print(4 spaces+ "BANKING" + 7 space + 2 char)
+		else if(i==16) print(8 spaces+ "APP" + 7 space + 2 char)
+		else if(i==17 || i==19) print(18 spaces + 2 char)
+		else if(i==18) print(3 spaces+ "By ~ MehRaj" + 4 spaces + 2 char)
+		else if(i==20) print(20 char)
+		}
+		print a new line alyz (x20)
+	

@@ -1,0 +1,95 @@
+____________________________________________________________________________
+|>>>>>>>>>>>>>>>>>>>>>>>>| Banking Management App |<<<<<<<<<<<<<<<<<<<<<<<<|
+|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
+|==============================| MAIN MENU |===============================|
+|__________________________________________________________________________|
+|5                                                                         |
+|6   1 >>>  Open New Account                                               |
+|7   2 >>>  Statement Of Existing Account                                  |
+|8   3 >>>  Transection                                                    |
+|9   4 >>>  Take loan                                                      |
+|10  5 >>>  Bank Status                                                    |
+|11  6 >>>  Update Your Account Information                                |
+|12  7 >>>  Pay Bill                                                       |
+|13  8 >>>  About this app                                                 | 
+|14  9 >>>  EXIT                                                           |
+|15                                   ________________________________     |
+|16                                   | ENTER YOUR CHOICE...  <1-9>  |     |
+|17                                   |                              |     |
+|_____________________________________|                              |_____|
+...................................... >>>
+
+Code:
+pf('_',76); ENTER;
+rep(18){
+	cout<<'|';
+	if(i==1) {
+	pf('>',24); pf("| Banking Management App |",1); pf('<',24); }
+	else if(i==2) pf('~',74)
+	else if(i==3){ pf('=',30); pf("| MAIN MENU |",1); pf('=',31); }
+	else if(i==4) pf('_',74);
+	else if(i==5) pf(' ',74);
+	else if(i==15) { pf(' ',37); pf('_',32); pf(' ',5);}
+	else if(i==16) { 
+		pf(' ',37); 
+		pf("| ENTER YOUR CHOICE...  <1-9>  |",1); 
+		pf(' ',5);
+	}
+	else if(i==17) { pf(' ',37); pf('|',1); 
+		pf(' ',30); pf('|',1); pf(' ',5);}
+	else if(i==18) {pf('_',37); pf('|',1); 
+		pf(' ',30); pf('|',1); pf('_',5);} 
+	else if(i==6){
+		pf(' ',4);
+		cout<<"1 >>>  Open New Account";
+		pf(' ',47);
+	}
+	else if(i==7){
+		pf(' ',4);
+		cout<<"2 >>>  Statement Of Existing Account";
+		pf(' ',34);
+	}
+	else if(i==8){
+		pf(' ',4);
+		cout<<"3 >>>  Transection";
+		pf(' ',52);
+	}
+	else if(i==9){
+		pf(' ',4);
+		cout<<"4 >>>  Take loan";
+		pf(' ',54);
+	}
+	else if(i==10){
+		pf(' ',4);
+		cout<<"5 >>>  Bank Status";
+		pf(' ',52);
+	}
+	else if(i==11){
+		pf(' ',4);
+		cout<<"6 >>>  Update Your Account Information";
+		pf(' ',32);
+	}
+	else if(i==12){
+		pf(' ',4);
+		cout<<"7 >>>  Pay Bill";
+		pf(' ',55);
+	}
+	else if(i==13){
+		pf(' ',4);
+		cout<<"8 >>>  About this app";
+		pf(' ',49);
+	}
+	else if(i==14){
+		pf(' ',4);
+		cout<<"9 >>>  EXIT";
+		pf(' ',59);
+	}
+	cout<<'|';
+	ENTER;
+}
+pf('.',38); pf(" >>> ",1);
+
+
+
+
+

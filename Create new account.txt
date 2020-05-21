@@ -30,7 +30,8 @@ The AccountNumber be a NineDigitNumber which may contain leading zeros
 So we can have 10^9 = 1,000,000,000 (One Billion) users
 This should be enough for a bank... :P
 I will make a file which will contain only the AccountNumbers of the users
-And I will let the users to choose their own bank account numbers and then search for it in my indexes of other account numbers. If it dont matches to any existing ID then I will let the users to choose it as his/her ID. 
+And I will let the users to choose their own bank account numbers and then search for it in my indexes of other account numbers.
+If it dont matches to any existing ID then I will let the users to choose it as his/her ID. 
 
 'Type':
 the type of the account is also important. We will consider following types with following code:

@@ -1,0 +1,27 @@
+All infos will be saved at file "root.txt"
+The information that I will store is:
+>>> Account Number
+>>> First Name + Last Name
+>>> Current_Balance
+>>> Phone Number
+>>> Account Password
+>>> Account rate
+>>> Account's rate Type
+>>> Starting Date of The Balance
+>>> Date of Birth
+>>> Account holder's most memorable day
+    (For The security purpose)
+So I will make a structure nammed as:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+|              <<< Account >>>                   |
+|string AccountNumber, FirstName,LastName,       |
+|PhoneNumber, Password;                          |
+|long long Balance, Rate, Type;                  |
+|date InitialDate, MemorableDate, DateOfBirth;   |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The format of each Account's infos will be as follows:
+AccountNumber FirstName LastName PhoneNumber Password Balance Rate Type InitialDate MemorableDate DateOfBirth
+
+
+ 

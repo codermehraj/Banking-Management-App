@@ -1,27 +1,42 @@
 All infos will be saved at file "root.txt"
 The information that I will store is:
->>> Account Number
->>> First Name + Last Name
->>> Current_Balance
->>> Phone Number
->>> Account Password
->>> Account rate
->>> Account's rate Type
->>> Starting Date of The Balance
->>> Date of Birth
->>> Account holder's most memorable day
+- Account Number
+- First Name + Last Name
+- Current_Balance
+- National ID Number
+- Phone Number
+- Account Password
+- Account rate
+- Account's rate Type
+- Starting Date of The Balance
+- Date of Birth
+- Account holder's most memorable day
     (For The security purpose)
 So I will make a structure nammed as:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 |              <<< Account >>>                   |
 |string AccountNumber, FirstName,LastName,       |
-|PhoneNumber, Password;                          |
-|long long Balance, Rate, Type;                  |
+|PhoneNumber, Password, NID;                     |
+|long double Balance, Rate, Type;                |
 |date InitialDate, MemorableDate, DateOfBirth;   |
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The format of each Account's infos will be as follows:
-AccountNumber FirstName LastName PhoneNumber Password Balance Rate Type InitialDate MemorableDate DateOfBirth
+The format of each Account's infos will be as follows: ('root.txt')
+AccountNumber FirstName LastName NID PhoneNumber Password Balance Rate Type InitialDate MemorableDate DateOfBirth
+
+Let,
+'AccountNumber':
+The AccountNumber be a NineDigitNumber which may contain leading zeros
+So we can have 10^9 = 1,000,000,000 (One Billion) users
+This should be enough for a bank... :P
+I will make a file which will contain only the AccountNumbers of the users
+And I will let the users to choose their own bank account numbers and then search for it in my indexes of other account numbers. If it dont matches to any existing ID then I will let the users to choose it as his/her ID. 
+
+'Type':
+the type of the account is also important. We will consider following types with following code:
+- Savings Account (code=1)
+- Fixed Deposit (code=2)
+- Current Account AKA Business Account(No Interest) (code=3)
 
 
  

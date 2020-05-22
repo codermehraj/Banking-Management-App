@@ -12,6 +12,7 @@ The information that I will store is:
 - Date of Birth
 - Account holder's most memorable day
     (For The security purpose)
+All the dates have to be between 1900-2100
 So I will make a structure nammed as:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 |              <<< Account >>>                   |
@@ -49,8 +50,9 @@ Then I will check from my user account number list and then let the user know we
 < 2nd Step >
 - Then I will pick his/her First name and last name <ok>
 - Then I will take his/her NID <ok>
-- Then I will ask her Date of Birth 
-- Then I will take his/her Phone number
+- Then I will ask his/her Date of Birth <ok>
+- Then I will take his/her Phone number <ok>
+<3rd Step>
 - Then I will take his password
 - Then I will take his initial Debit Balance
 - Then I will set his last transection

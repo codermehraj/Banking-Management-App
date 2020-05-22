@@ -31,7 +31,8 @@ The AccountNumber be a NineDigitNumber which may contain leading zeros
 So we can have 10^9 = 1,000,000,000 (One Billion) users
 This should be enough for a bank... :P
 I will make a file which will contain only the AccountNumbers of the users
-And I will let the users to choose their own bank account numbers and then search for it in my indexes of other account numbers. If it dont matches to any existing ID then I will let the users to choose it as his/her ID. 
+And I will let the users to choose their own bank account numbers and then search for it in my indexes of other account numbers.
+If it dont matches to any existing ID then I will let the users to choose it as his/her ID. 
 
 'Type':
 the type of the account is also important. We will consider following types with following code:
@@ -41,7 +42,8 @@ the type of the account is also important. We will consider following types with
 
 Now Let me come to the interface of Create New Account:
 < 1st Step >
-First Of All I will Ask the user to choose an account number for him/her. which must contain 9 digit and that can have Leading Zeros. Then I will check from my user account number list and then let the user know weather he/she can have that account number or not.
+First Of All I will Ask the user to choose an account number for him/her. which must contain 9 digit and that can have Leading Zeros. 
+Then I will check from my user account number list and then let the user know weather he/she can have that account number or not.
 - So Here the overall data will be kept in "root.txt" file.
 - And the index will be found at "index.txt" file.
 < 2nd Step >
@@ -52,7 +54,8 @@ First Of All I will Ask the user to choose an account number for him/her. which 
 - Then I will take his password
 - Then I will take his initial Debit Balance
 - Then I will set his last transection
-- Then I will ask if it is a VIP account or not if it is a VIP account then I will take a custom rate for the VIP customer. Otherwise I will set the rate to 0.00
+- Then I will ask if it is a VIP account or not if it is a VIP account then I will take a custom rate for the VIP customer. 
+  Otherwise I will set the rate to 0.00
 - Then I will ask for the account type
 - Then I will ask today's date AKA the initial date of the account
 - Then I will ask for his/her one memorable date just for security purpose

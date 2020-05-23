@@ -114,7 +114,9 @@ int main()
 	}
 	return 0;
 }
+
 /// LOADING FUNCTION
+
 void load()
 {
 	clr;
@@ -362,6 +364,7 @@ void ani()
 }
 
 /// FUNCTION RELETED TO ANIMATE
+
 void animate_seq_fn(vector<int> &seq)
 {
 	string What_To_Print = "0 ";
@@ -374,6 +377,7 @@ void animate_seq_fn(vector<int> &seq)
 }
 
 /// 2ND ANIMATION ~ LOGO
+
 void ani_2()
 {
 	vector<int> seq;
@@ -484,6 +488,7 @@ void ani_2()
 }
 
 /// INITIATEING LOGO ~ ANIMATION
+
 void Hit_with_a_nyx_logo_to_flex_up()
 {
 	ani();
@@ -492,6 +497,7 @@ void Hit_with_a_nyx_logo_to_flex_up()
 }
 
 /// FUNCTION TO INITIATE
+
 void initiate_app_environment()
 {
 	rep(4) cout << "\n";
@@ -511,6 +517,8 @@ void initiate_app_environment()
 	load();
 }
 
+// Function to show up the initial message of account creation
+
 void new_account_message()
 {
 	clr;
@@ -529,6 +537,8 @@ void new_account_message()
 	cout << "\n";
 }
 
+// Function to add all the infromation of a bank account to the end of the file
+
 void AddThemAllToTheFile(BankAccount temp)
 {
 	ofstream add_new_acc_num("index.txt", ios::app);
@@ -545,6 +555,8 @@ void AddThemAllToTheFile(BankAccount temp)
 					<< " " << temp.DateOfBirth.year << "\n";
 	add_new_acc_num.close();
 }
+
+// Function to check if a new account number is valid or not
 
 bool valid_account_number(string ac_num, int *error_msg)
 {
@@ -613,6 +625,8 @@ bool valid_account_number(string ac_num, int *error_msg)
 	}
 }
 
+// Function to check if NID number is correct format or not
+
 bool correct_NID_number(string NID)
 {
 	int n = NID.size();
@@ -622,9 +636,12 @@ bool correct_NID_number(string NID)
 	return 1;
 }
 
+// Function to check if email address is correct format or not
+
 bool correct_email_address(string email)
 {
 	/*
+		CONDITIONS :
         First character must be letter
         must contain only 1 @
         must have at least 1 dot after @
@@ -655,6 +672,8 @@ bool correct_email_address(string email)
 	return 0;
 }
 
+// Function to check if phone number is correct format or not
+
 bool correct_phone_number(string phone)
 {
 	int n = phone.size();
@@ -663,6 +682,8 @@ bool correct_phone_number(string phone)
 			return 0;
 	return 1;
 }
+
+// Function to check if given date is correct format or not
 
 bool nice_date(string a_date, date *x)
 {
@@ -690,8 +711,17 @@ bool nice_date(string a_date, date *x)
 		return 0;
 }
 
+// Function to check if password is correct format or not
+
 bool chk_pass_ok_or_not(string passA, string passB, int *error_msg)
 {
+	/*
+		CONDITIONS :
+		- Length must be at least 6
+		- Must contain a number
+		- Must contain an uppercase letter
+		- Must contain a lowercase letter
+	*/
 	if (passA != passB)
 	{
 		*error_msg = 1;
@@ -739,6 +769,8 @@ bool chk_pass_ok_or_not(string passA, string passB, int *error_msg)
 	return 1;
 }
 
+// Function to check if initial balance is valid or not
+
 bool initial_balance_fine(string amount_string, long double *amount)
 {
 	int n = amount_string.size(), i = 0, value = 1;
@@ -760,6 +792,8 @@ bool initial_balance_fine(string amount_string, long double *amount)
 		return 0;
 	return 1;
 }
+
+// Function to check if VIP rate is valid or not
 
 bool VIP_ok_rate(string rate_s, long double *rate)
 {
@@ -786,6 +820,8 @@ bool VIP_ok_rate(string rate_s, long double *rate)
 	return 0;
 }
 
+// Function to check if account type is valid or not
+
 bool valid_acc_type(string s, int *ans)
 {
 	if (s.size() > 1)
@@ -808,6 +844,8 @@ bool valid_acc_type(string s, int *ans)
 	return 0;
 }
 
+// Function to check if date difference is valid or not
+
 bool date_diff(date a, date b)
 {
 	// returns true if a>=b
@@ -825,6 +863,8 @@ bool date_diff(date a, date b)
 			return a.day >= b.day;
 	}
 }
+
+// Function to show all info to the user and get confirmation
 
 bool Show_all_info_and_all_ok(BankAccount temp)
 {
@@ -892,9 +932,11 @@ bool Show_all_info_and_all_ok(BankAccount temp)
 	} while (1);
 }
 
+// Function to create a new bank account
+
 void create_new_account()
 {
-    load();
+	load();
 	BankAccount save_new_account;
 	string ac_num;
 	int error_msg = 0;

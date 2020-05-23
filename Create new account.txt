@@ -17,14 +17,14 @@ So I will make a structure nammed as:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 |              <<< Account >>>                   |
 |string AccountNumber, FirstName,LastName,       |
-|PhoneNumber, Password, NID;                     |
+|PhoneNumber, Password, NID, email;              |
 |long long LastTransection;                      |
 |long double Balance, Rate, Type;                |
 |date InitialDate, MemorableDate, DateOfBirth;   |
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The format of each Account's infos will be as follows: ('root.txt')
-AccountNumber FirstName LastName NID PhoneNumber Password Balance LastTransection Rate Type InitialDate MemorableDate DateOfBirth
+AccountNumber FirstName LastName NID PhoneNumber email Password Balance LastTransection Rate Type InitialDate MemorableDate DateOfBirth
 
 Let,
 'AccountNumber':
@@ -53,15 +53,24 @@ Then I will check from my user account number list and then let the user know we
 - Then I will ask his/her Date of Birth <ok>
 - Then I will take his/her Phone number <ok>
 <3rd Step>
-- Then I will take his password
-- Then I will take his initial Debit Balance
-- Then I will set his last transection
-- Then I will ask if it is a VIP account or not if it is a VIP account then I will take a custom rate for the VIP customer. 
-  Otherwise I will set the rate to 0.00
-- Then I will ask for the account type
-- Then I will ask today's date AKA the initial date of the account
-- Then I will ask for his/her one memorable date just for security purpose
+- Then I will take his password <ok>
+<4th Step>
+- Then I will take his initial Debit Balance <ok>
+- Then I will set his last transection <ok>
+- Then I will ask if it is a VIP account or not if it is a VIP account then I will take a custom rate for the VIP customer. <ok>
+  Otherwise I will set the rate to 0.00 <ok>
+- Then I will ask for the account type <ok>
+- Then I will ask today's date AKA the initial date of the account <ok>
+- Then I will ask for his/her one memorable date just for security purpose <ok>
 
+Showing all info altogather:
+Check in dashboard file
+
+Code to store them in a file
+<<AccountNumber<<" "<<Password<<" "<<FirstName<<" "<<LastName<<" "<<NID<<" "
+<<PhoneNumber<<" "<<email <<" "<<Balance<<" "<<LastTransection
+<<" "<<Rate<<" "<<Type<<" "<<InitialDate<<" "<<MemorableDate<<" "<<DateOfBirth
+	
 
 
  

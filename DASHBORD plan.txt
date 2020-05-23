@@ -1,0 +1,41 @@
+|___________________________________________________________________________________|
+|...................................| DASHBOARD |...................................|
+|___________________________________________________________________________________|
+     1. Account Number   : 123456789
+     2. Full Name        : Mehrajul Islam
+     3. National ID      : 1223123213123
+     4. Contact Number   : +88019131112522
+     5. Email Address    : codermehraj@gmail.com
+     6. Date of Birth    : 29/10/2001
+     7. Password         : MyNameisKhan1
+     8. Balance          : 1000$
+     9. Last Transection : ADDED 1000$
+    10. VIP Status       : YES ( VIP custom rate = 20% ) 
+    11. Account Type     : Savings Account
+    12. A/c Origin Date  : 10/05/2020
+    13. Memorable Date   : 27/05/2019          
+
+         Please Check the above information.
+	 If These are correct Press 'Y' to say YES
+	 Otherwise Press 'N' to say NO and return to main menu
+
+	Enter your choice ::  
+Code:
+cout<<"     1. Account Number   : "<<acu<<endl;
+cout<<"     2. Full Name        : "<<fname<<" "<<lname<<endl;
+cout<<"     3. National ID      : "<<NID<<endl;
+cout<<"     4. Contact Number   : "<<phone<<endl;
+cout<<"     5. Email Address    : "<<email<<endl;
+cout<<"     6. Date of Birth    : "<<day<<"/"<<month<<"/"<<year<<endl;
+cout<<"     7. Password         : "<<pass<<endl;
+cout<<"     8. Balance          : "<<balance<<"$\n";
+cout<<"     9. Last Transection : ADDED "<<balance<<"$\n";
+cout<<"    10. VIP Status       : ";
+if(rate>0.00) cout<<"YES ( VIP custom rate = "<<rate<<"% )\n";
+else cout<<"NO\n"; 
+cout<<"    11. Account Type     : ";
+if(Type==1) cout<<"Savings Account\n";
+else if(Type==2) cout<<"Fixed Deposit Account\n";
+else if(Type==3) cout<<"Business Account\n";
+cout<<"    12. A/c Origin Date  : "<<day<<"/"<<month<<"/"<<year<<endl;
+cout<<"    13. Memorable Date   : "<<day<<"/"<<month<<"/"<<year<<endl;

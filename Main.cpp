@@ -97,6 +97,9 @@ bool valid_acc_type(string s, int *ans);
 bool date_diff(date a, date b);
 bool Show_all_info_and_all_ok(BankAccount temp);
 void create_new_account();
+void Show_Statement();
+bool not_found(string s);
+void Show_dashboard(BankAccount temp);
 
 /// The main Function
 
@@ -109,7 +112,9 @@ int main()
 		menu_choice_num = Get_Menu_Choice_Num();
 		if (menu_choice_num == 1)
 			create_new_account();
-		if (menu_choice_num == 9)
+		else if (menu_choice_num == 2)
+			Show_Statement();
+		else if (menu_choice_num == 9)
 			break;
 	}
 	return 0;
@@ -887,7 +892,7 @@ bool Show_all_info_and_all_ok(BankAccount temp)
 		 << temp.DateOfBirth.month << "/" << temp.DateOfBirth.year << endl;
 	cout << "\t     7. Password         : " << temp.Password << endl;
 	cout << "\t     8. Balance          : " << temp.Balance << "$\n";
-	cout << "\t     9. Last Transection : ADDED " << temp.Balance << "$\n";
+	cout << "\t     9. Last Transection : Credited " << temp.LastTransection << "$\n";
 	cout << "\t    10. VIP Status       : ";
 	if (temp.Rate >= 0.00)
 		cout << "YES ( VIP custom rate = " << temp.Rate << "% )\n";
@@ -1252,4 +1257,156 @@ void create_new_account()
 	cout << "\n\tYour Account has been saved successfully\n\n\t";
 	cout << "Press enter to continue... ";
 	getchar();
+}
+
+// Function to find existing account from the file
+
+bool not_found(string s)
+{
+	// return 1 if not found
+	// return 0 if found
+	string acc;
+	if (s.size() != 9)
+		return 1;
+	ifstream index_file("index.txt");
+	while (!index_file.eof())
+	{
+		index_file >> acc;
+		if (acc == s)
+		{
+			index_file.close();
+			return 0;
+		}
+	}
+	return 1;
+}
+
+// Function to show the statement AKA Dashbord
+
+void Show_dashboard(BankAccount temp)
+{
+	load();
+	cout << "\n\n\t|";
+	pf('_', 84);
+	cout << "|\n\t|";
+	pf('.', 35);
+	cout << "| DASHBOARD |";
+	pf('.', 36);
+	cout << "|\n\t|";
+	pf('_', 84);
+	cout << "|\n\n";
+	cout << "\t     1. Account Number   : " << temp.AccountNumber << endl;
+	cout << "\t     2. Full Name        : " << temp.FirstName << " " << temp.LastName << endl;
+	cout << "\t     3. National ID      : " << temp.NID << endl;
+	cout << "\t     4. Contact Number   : " << temp.PhoneNumber << endl;
+	cout << "\t     5. Email Address    : " << temp.email << endl;
+	cout << "\t     6. Date of Birth    : " << temp.DateOfBirth.day << "/"
+		 << temp.DateOfBirth.month << "/" << temp.DateOfBirth.year << endl;
+	cout << "\t     7. Password         : " << temp.Password << endl;
+	cout << "\t     8. Balance          : " << temp.Balance << "$\n";
+
+	if (temp.LastTransection >= 0.00)
+		cout << "\t     9. Last Transection : Credited " << temp.LastTransection << "$\n";
+	else
+		cout << "\t     9. Last Transection : Debited " << -1.0 * temp.LastTransection << "$\n";
+
+	cout << "\t    10. VIP Status       : ";
+	if (temp.Rate >= 0.00)
+		cout << "YES ( VIP custom rate = " << temp.Rate << "% )\n";
+	else
+		cout << "NO\n";
+	cout << "\t    11. Account Type     : ";
+	if (temp.Type == 1)
+		cout << "Savings Account\n";
+	else if (temp.Type == 2)
+		cout << "Fixed Deposit Account\n";
+	else if (temp.Type == 3)
+		cout << "Business Account\n";
+	cout << "\t    12. A/c Origin Date  : " << temp.InitialDate.day << "/"
+		 << temp.InitialDate.month << "/" << temp.InitialDate.year << endl;
+	cout << "\t    13. Memorable Date   : " << temp.MemorableDate.day << "/"
+		 << temp.MemorableDate.month << "/" << temp.MemorableDate.year << endl;
+	cout << "\n\tHere is your statement.\n\t";
+	cout << "Press '1' to return to the main menu\n\n\t";
+	cout << "Enter your choice :: ";
+	string choice;
+	bool first = 1;
+	do
+	{
+		if (!first)
+		{
+			cout << "\n\tINVALID CHOICE\n\tPress '1' to return to main menu\n";
+			cout << "\tEnter your choice ('1') >>> ";
+		}
+		cin >> choice;
+		cin.ignore(1000, '\n');
+		first = 0;
+	} while (choice != "1");
+}
+
+// Function to initiate show statement command in menu
+
+void Show_Statement()
+{
+	load();
+	pf('\n', 3);
+	cout << "\tTo see your account statement give us the following information\n\n\t";
+	string ac_num;
+	bool starting = 1;
+	do
+	{
+		if (!starting)
+			cout << "\n\tInvalid Account Number\n\t";
+		cout << "Press '1' to return to main menu\n";
+		cout << "\tEnter your Account number ::  ";
+		cin >> ac_num;
+		cin.ignore(1000, '\n');
+		if (ac_num == "1")
+			return;
+		starting = 0;
+	} while (not_found(ac_num));
+	ifstream get_acc("root.txt");
+	BankAccount temp;
+	while (!get_acc.eof())
+	{
+		get_acc >> temp.AccountNumber >> temp.Password >> temp.FirstName >> temp.LastName >> temp.NID >> temp.PhoneNumber;
+		get_acc >> temp.email >> temp.Balance >> temp.LastTransection >> temp.Rate >> temp.Type >> temp.InitialDate.day;
+		get_acc >> temp.InitialDate.month >> temp.InitialDate.year;
+		get_acc >> temp.MemorableDate.day >> temp.MemorableDate.month >> temp.MemorableDate.year >> temp.DateOfBirth.day >> temp.DateOfBirth.month >> temp.DateOfBirth.year;
+		if (temp.AccountNumber == ac_num)
+		{
+			string passwrd;
+			get_acc.close();
+			cout << "\n\n\tCongratulation!\n\tAccount Number :: | " << ac_num << " | is Found\n\t";
+			cout << "Welcome, " << temp.FirstName << " " << temp.LastName << "\n";
+			cout << "\n\tEnter You Password to get logged in to your account\n";
+			starting = 1;
+			int try_left = 5;
+			do
+			{
+				if (try_left == 0)
+				{
+					cout << "\n\tSORRY! All your tries are gone\n\n\t";
+					cout << "Press Enter to continue...";
+					getchar();
+					return;
+				}
+				if (!starting)
+					cout << "\tSORRY! Password Didn't Matched\n\tTry Again\n";
+				cout << "\n \tPress '1' to return to the main menu\n\t";
+				cout << try_left-- << " tries left :)\n";
+				cout << "\n\tEnter your password :: ";
+				cin >> passwrd;
+				cin.ignore(1000, '\n');
+				if (passwrd == "1")
+					return;
+				starting = 0;
+			} while (passwrd != temp.Password);
+			cout << "\n\tCongratulation! Password is matched\n\n\t";
+			cout << "Press enter to continue... ";
+			getchar();
+			Show_dashboard(temp);
+			return;
+		}
+	}
 }

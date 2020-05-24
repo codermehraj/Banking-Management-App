@@ -11,6 +11,7 @@ The information that I will store is:
 - Starting Date of The Balance
 - Date of Birth
 - Account holder's most memorable day
+- Last Transection date
     (For The security purpose)
 All the dates have to be between 1900-2100
 So I will make a structure nammed as:
@@ -20,7 +21,8 @@ So I will make a structure nammed as:
 |PhoneNumber, Password, NID, email;              |
 |long long LastTransection;                      |
 |long double Balance, Rate, Type;                |
-|date InitialDate, MemorableDate, DateOfBirth;   |
+|date InitialDate, MemorableDate, DateOfBirth,   |
+|     LastTransectionDate;                       |
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The format of each Account's infos will be as follows: ('root.txt')
@@ -69,7 +71,7 @@ Check in dashboard file
 Code to store them in a file
 <<AccountNumber<<" "<<Password<<" "<<FirstName<<" "<<LastName<<" "<<NID<<" "
 <<PhoneNumber<<" "<<email <<" "<<Balance<<" "<<LastTransection
-<<" "<<Rate<<" "<<Type<<" "<<InitialDate<<" "<<MemorableDate<<" "<<DateOfBirth
+<<" "<<Rate<<" "<<Type<<" "<<InitialDate<<" "<<MemorableDate<<" "<<DateOfBirth<<" "<<LastTransectionDate(InitiateDate)
 	
 
 

@@ -1,0 +1,28 @@
+There are 3 type of account and an special VIP account.
+
+>>> ACCOUNT TYPE 1: Savings Account
+    This type of account is pretty basic. It contains a simple rate of interest. This will have a total of 6% simple rate of interest. You can take out your money at any time.
+  <  Final Amount = InitialPrincipleBalance (1 + rate*time)  > 
+So we need here time in years but we know the time in day format.
+So, time = ( days/365 )  years
+So, | Type 1 Formula |
+    Final Amount = cur_balance * ( 1.00 + 0.06*(days/365.00) ) 
+
+>>> ACCOUNT TYPE 2: Fixed Deposit Account ~ FDR
+    This type of account have the highest rate. It contains a compund rate of interest. This will have a total of 10% compund rate of interest. But you can not take out your money before 2 years. Each 2 year your account will be credited 10% per year compund rate of interest.
+  <  finalAmount = PrincipleAmount(1 + rate/100.00)^years  > 
+So we need here time in years but we know the time in day format.
+So, time = ( days/365 )  years
+finalAmount = cur_balance * (1.1)^years
+
+>>> ACCOUNT TYPE 3: Current Account ~ Business Account
+    This type of account has no rate of interest. It is just for transfering money for business.
+So, FinalAmount = curr_balances
+
+>>> Last One : VIP ACCOUNT xD
+This type of account have the custom compound rate(0%-20%). It contains a compund rate of interest. Here You can take back your money at any time still get appropriate interest.
+  <  finalAmount = PrincipleAmount(1 + rate/100.00)^years  > 
+So we need here time in years but we know the time in day format.
+So, time = ( days/365 )  years
+finalAmount = cur_balance * (1+rate/100.00)^years
+

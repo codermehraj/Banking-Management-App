@@ -605,6 +605,12 @@ bool valid_account_number(string ac_num, int *error_msg)
 				cout << "\tEnter your choice (Y/N) >>> ";
 			}
 			cin >> choice;
+			if (choice == "1")
+			{
+				*error_msg = 5;
+				// return to main menu
+				return 0;
+			}
 			cin.ignore(1000, '\n');
 			if (choice == "y" || choice == "Y" || choice == "YES" || choice == "yes" || choice == "Yes")
 			{
@@ -953,7 +959,8 @@ void create_new_account()
 		cout << "\t>>> Consist of Nine digits.\n";
 		cout << "\t>>> Can have any digit from ( 0-9 ).\n";
 		cout << "\t>>> Can contain any number of leading zeros.\n";
-		cout << "\t>>> It have to be UNIQUE ( Which is pretty obvious )\n\n";
+		cout << "\t>>> It have to be UNIQUE ( Which is pretty obvious )\n";
+		cout << "\tPress '1' to return to main menu...\n\n";
 		if (error_msg != 0)
 		{
 			cout << "\t" << ac_num << " is invalid\n\t";
@@ -968,12 +975,15 @@ void create_new_account()
 				cout << "Alas! You choose not use '" << ac_num << "' as your account number";
 				cout << "\n\tIt was available for use though...\n";
 			}
-
+			else if (error_msg == 5)
+				return;
 			cout << "\n\tPlease again enter an account number for your account ::\n\t>>> ";
 		}
 		else
 			cout << "\tEnter an account number for your account ::\n\t>>> ";
 		cin >> ac_num;
+		if (ac_num == "1")
+			return;
 	} while (!valid_account_number(ac_num, &error_msg));
 	new_account_message();
 	save_new_account.AccountNumber = ac_num;
@@ -989,13 +999,18 @@ void create_new_account()
 		cout << "\n\n\tAccount number | " << save_new_account.AccountNumber << " |\n";
 		cout << "\tNow Please give the following Basic Information :\n\n";
 		cout << "\t### | NOTE THAT TEXT SHOULD NOT CONTAIN ANY SPACES | ###\n\n\t";
-		cout << "Still if found any text after space that will be ignored\n\n\t";
+		cout << "Still if found any text after space that will be ignored\n";
+		cout << "\tPress '1' to return to main menu...\n\t";
 		cout << "Your first name :: ";
 		cin >> name;
+		if (name == "1")
+			return;
 		save_new_account.FirstName = name;
 		cin.ignore(1000, '\n');
 		cout << "\tYour last name :: ";
 		cin >> name;
+		if (name == "1")
+			return;
 		save_new_account.LastName = name;
 		cin.ignore(1000, '\n');
 		bool starter = 1;
@@ -1005,6 +1020,8 @@ void create_new_account()
 				cout << "\n\tINVALID NID Number( Should have only digits 0-9 )";
 			cout << "\n\tYour National ID number :: ";
 			cin >> name;
+			if (name == "1")
+				return;
 			cin.ignore(1000, '\n');
 			starter = 0;
 		} while (!correct_NID_number(name));
@@ -1016,6 +1033,8 @@ void create_new_account()
 				cout << "\n\tINVALID email address\n\tTRY AGAIN";
 			cout << "\n\tYour email address :: ";
 			cin >> name;
+			if (name == "1")
+				return;
 			cin.ignore(1000, '\n');
 			starter = 0;
 		} while (!correct_email_address(name));
@@ -1031,6 +1050,8 @@ void create_new_account()
 			}
 			cout << "\n\tEnter Your Date of Birth ( example : 01/05/1995 )\n\t>>> ";
 			cin >> name;
+			if (name == "1")
+				return;
 			cin.ignore(1000, '\n');
 			starter = 0;
 		} while (!nice_date(name, &x));
@@ -1042,6 +1063,8 @@ void create_new_account()
 				cout << "\n\tINVALID Phone Number( Should have only digits 0-9 )";
 			cout << "\n\tYour Phone number :: +";
 			cin >> name;
+			if (name == "1")
+				return;
 			cin.ignore(1000, '\n');
 			starter = 0;
 		} while (!correct_phone_number(name));
@@ -1067,7 +1090,8 @@ void create_new_account()
 		cout << "\t- Password must contain at least 6 charecters\n";
 		cout << "\t- Password must contain at least 1 number 0-9\n";
 		cout << "\t- Password must contain at least 1 Uppercase Letter (A-Z)\n";
-		cout << "\t- Password must contain at least 1 Lowercase Letter (a-z)\n\n";
+		cout << "\t- Password must contain at least 1 Lowercase Letter (a-z)\n";
+		cout << "\n\tPress '1' to return to the main menun\n\n";
 		do
 		{
 			if (error_msg == 1)
@@ -1098,9 +1122,13 @@ void create_new_account()
 			}
 			cout << "\tEnter Your password :: ";
 			cin >> passA;
+			if (passA == "1")
+				return;
 			cin.ignore(1000, '\n');
 			cout << "\tConfirm Your password :: ";
 			cin >> passB;
+			if (passB == "1")
+				return;
 			cin.ignore(1000, '\n');
 		} while (!chk_pass_ok_or_not(passA, passB, &error_msg));
 		save_new_account.Password = passA;
@@ -1118,6 +1146,7 @@ void create_new_account()
 		cout << "\tNow Please give the following Intermediate Information :\n\n";
 		cout << "\t### | NOTE THAT TEXT SHOULD NOT CONTAIN ANY SPACES | ###\n\n\t";
 		cout << "Still if found any text after space that will be ignored\n\n\t";
+		cout << "Press '1' to return to the main menu\n\n\t";
 		string name;
 		long double amount;
 		bool starter = 1;
@@ -1131,6 +1160,8 @@ void create_new_account()
 			cout << "\tEnter your Initial Deposit amount :: (It must be at least 500)\n";
 			cout << "\t>>> ";
 			cin >> name;
+			if (name == "1")
+				return;
 			cin.ignore(1000, '\n');
 			starter = 0;
 		} while (!initial_balance_fine(name, &amount));
@@ -1150,6 +1181,8 @@ void create_new_account()
 				cout << "\tEnter your choice (Y/N) >>> ";
 			}
 			cin >> choice;
+			if (choice == "1")
+				return;
 			cin.ignore(1000, '\n');
 			if (choice == "y" || choice == "Y" || choice == "YES" || choice == "yes" || choice == "Yes")
 			{
@@ -1210,6 +1243,7 @@ void create_new_account()
 		cout << "\tNow Please give the following Intermediate Information :\n\n";
 		cout << "\t### | NOTE THAT TEXT SHOULD NOT CONTAIN ANY SPACES | ###\n\n\t";
 		cout << "Still if found any text after space that will be ignored\n\n\t";
+		cout << "Press '1' to return to main menu\n\n\t";
 		bool starter = 1;
 		string name;
 		date x;
@@ -1222,6 +1256,8 @@ void create_new_account()
 			}
 			cout << "\n\tEnter Today's Date ( example : 01/05/1995 )\n\t>>> ";
 			cin >> name;
+			if (name == "1")
+				return;
 			cin.ignore(1000, '\n');
 			starter = 0;
 			if (nice_date(name, &x))
@@ -1245,6 +1281,8 @@ void create_new_account()
 			}
 			cout << "\n\tEnter Your Most memorable date ( example : 01/05/1995 )\n\t>>> ";
 			cin >> name;
+			if (name == "1")
+				return;
 			cin.ignore(1000, '\n');
 			starter = 0;
 		} while (!nice_date(name, &x));

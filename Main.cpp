@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iomanip>
 #include <vector>
+#include <cmath>
 #include <windows.h>
 
 using namespace std;
@@ -71,7 +72,7 @@ typedef struct BankAccount
 	int Type;
 	// Rate will be initially zero
 	// If you want to add a VIP customer then you can choose a special rate for him/her
-	date InitialDate, MemorableDate, DateOfBirth;
+	date InitialDate, MemorableDate, DateOfBirth, LastTransectionDate;
 };
 
 /// Function Prototypes
@@ -100,6 +101,18 @@ void create_new_account();
 void Show_Statement();
 bool not_found(string s);
 void Show_dashboard(BankAccount temp);
+void transection();
+void trans_initiate_message();
+void transection_from_this_account(BankAccount temp);
+void send_money_to_extarnal_account(date x, BankAccount temp);
+bool valid_send_money(string amount_string, long double *amount, long double Balance);
+int get_number_of_days(date dt1, date dt2);
+int countLeapYears(date d);
+long double get_new_balance(long double cur_balance, int acc_type, int vip_rate, int days_spent);
+bool update_bank_acc_info(BankAccount updated_acc);
+void recieve_money_from_extarnal_account(date x, BankAccount temp);
+void send_money_to_internal_account(date x, BankAccount temp);
+bool update_bank_acc_info_of_internal_reciever(string ac_num, date x, long double amount);
 
 /// The main Function
 
@@ -114,6 +127,8 @@ int main()
 			create_new_account();
 		else if (menu_choice_num == 2)
 			Show_Statement();
+		else if (menu_choice_num == 3)
+			transection();
 		else if (menu_choice_num == 9)
 			break;
 	}
@@ -142,7 +157,8 @@ void load()
 	pf("\n", 3);
 	pf("\t", 3);
 	cout << "press enter to continue...";
-	getchar();
+	string s;
+	getline(cin, s);
 	clr;
 }
 
@@ -550,14 +566,16 @@ void AddThemAllToTheFile(BankAccount temp)
 	add_new_acc_num << temp.AccountNumber << '\n';
 	add_new_acc_num.close();
 	add_new_acc_num.open("root.txt", ios::app);
-	add_new_acc_num << temp.AccountNumber << " " << temp.Password << " " << temp.FirstName
+	add_new_acc_num << '\n'
+					<< temp.AccountNumber << " " << temp.Password << " " << temp.FirstName
 					<< " " << temp.LastName << " " << temp.NID << " " << temp.PhoneNumber;
-	add_new_acc_num << " " << temp.email << " " << temp.Balance << " " << temp.LastTransection
+	add_new_acc_num << " " << temp.email << " " << fixed << setprecision(2) << temp.Balance << " " << temp.LastTransection
 					<< " " << temp.Rate << " " << temp.Type << " " << temp.InitialDate.day << " ";
 	add_new_acc_num << temp.InitialDate.month << " " << temp.InitialDate.year << " ";
 	add_new_acc_num << temp.MemorableDate.day << " " << temp.MemorableDate.month << " "
 					<< temp.MemorableDate.year << " " << temp.DateOfBirth.day << " " << temp.DateOfBirth.month
-					<< " " << temp.DateOfBirth.year << "\n";
+					<< " " << temp.DateOfBirth.year << " " << temp.InitialDate.day << " ";
+	add_new_acc_num << temp.InitialDate.month << " " << temp.InitialDate.year;
 	add_new_acc_num.close();
 }
 
@@ -897,8 +915,9 @@ bool Show_all_info_and_all_ok(BankAccount temp)
 	cout << "\t     6. Date of Birth    : " << temp.DateOfBirth.day << "/"
 		 << temp.DateOfBirth.month << "/" << temp.DateOfBirth.year << endl;
 	cout << "\t     7. Password         : " << temp.Password << endl;
-	cout << "\t     8. Balance          : " << temp.Balance << "$\n";
-	cout << "\t     9. Last Transection : Credited " << temp.LastTransection << "$\n";
+	cout << "\t     8. Balance          : " << fixed << setprecision(2) << temp.Balance << "$\n";
+	cout << "\t     9. Last Transection : Credited " << temp.LastTransection << "$ (";
+	cout << temp.LastTransectionDate.day << "/" << temp.LastTransectionDate.month << "/" << temp.LastTransectionDate.year << ")\n";
 	cout << "\t    10. VIP Status       : ";
 	if (temp.Rate >= 0.00)
 		cout << "YES ( VIP custom rate = " << temp.Rate << "% )\n";
@@ -987,7 +1006,7 @@ void create_new_account()
 	} while (!valid_account_number(ac_num, &error_msg));
 	new_account_message();
 	save_new_account.AccountNumber = ac_num;
-	cout << "\tCongratulation!\n\tYou are assigned to a new account number :: '" << ac_num;
+	cout << "\n\n\tCongratulation!\n\tYou are assigned to a new account number :: '" << ac_num;
 	cout << "'\n\tPress Enter to continue... ";
 	getchar();
 	load();
@@ -1269,6 +1288,7 @@ void create_new_account()
 			}
 		} while (1);
 		save_new_account.InitialDate = x;
+		save_new_account.LastTransectionDate = x;
 		starter = 1;
 		cout << "\n\tWe need to know your most memorable date for security purpose\n";
 		cout << "\tIt will be used to recover your password in case you need\n";
@@ -1341,12 +1361,14 @@ void Show_dashboard(BankAccount temp)
 	cout << "\t     6. Date of Birth    : " << temp.DateOfBirth.day << "/"
 		 << temp.DateOfBirth.month << "/" << temp.DateOfBirth.year << endl;
 	cout << "\t     7. Password         : " << temp.Password << endl;
-	cout << "\t     8. Balance          : " << temp.Balance << "$\n";
+	cout << "\t     8. Balance          : " << fixed << setprecision(2) << temp.Balance << "$\n";
 
 	if (temp.LastTransection >= 0.00)
-		cout << "\t     9. Last Transection : Credited " << temp.LastTransection << "$\n";
+		cout << "\t     9. Last Transection : Credited " << temp.LastTransection << "$ (";
 	else
-		cout << "\t     9. Last Transection : Debited " << -1.0 * temp.LastTransection << "$\n";
+		cout << "\t     9. Last Transection : Debited " << -1.0 * temp.LastTransection << "$ (";
+	cout << temp.LastTransectionDate.day << "/" << temp.LastTransectionDate.month << "/"
+		 << temp.LastTransectionDate.year << ")\n";
 
 	cout << "\t    10. VIP Status       : ";
 	if (temp.Rate >= 0.00)
@@ -1388,7 +1410,7 @@ void Show_Statement()
 {
 	load();
 	pf('\n', 3);
-	cout << "\tTo see your account statement give us the following information\n\n\t";
+	cout << "To see your account statement give us the following information\n\n\t";
 	string ac_num;
 	bool starting = 1;
 	do
@@ -1410,7 +1432,9 @@ void Show_Statement()
 		get_acc >> temp.AccountNumber >> temp.Password >> temp.FirstName >> temp.LastName >> temp.NID >> temp.PhoneNumber;
 		get_acc >> temp.email >> temp.Balance >> temp.LastTransection >> temp.Rate >> temp.Type >> temp.InitialDate.day;
 		get_acc >> temp.InitialDate.month >> temp.InitialDate.year;
-		get_acc >> temp.MemorableDate.day >> temp.MemorableDate.month >> temp.MemorableDate.year >> temp.DateOfBirth.day >> temp.DateOfBirth.month >> temp.DateOfBirth.year;
+		get_acc >> temp.MemorableDate.day >> temp.MemorableDate.month >> temp.MemorableDate.year;
+		get_acc >> temp.DateOfBirth.day >> temp.DateOfBirth.month >> temp.DateOfBirth.year;
+		get_acc >> temp.LastTransectionDate.day >> temp.LastTransectionDate.month >> temp.LastTransectionDate.year;
 		if (temp.AccountNumber == ac_num)
 		{
 			string passwrd;
@@ -1444,6 +1468,563 @@ void Show_Statement()
 			cout << "Press enter to continue... ";
 			getchar();
 			Show_dashboard(temp);
+			return;
+		}
+	}
+}
+
+// Function to initiate transection message
+
+void trans_initiate_message()
+{
+	clr;
+	pf('\n', 2);
+	cout << " |";
+	pf('_', 30);
+	cout << "| TRANSECTION MODE |";
+	pf('_', 30);
+	cout << "|\n\n";
+}
+
+// to check if send money is possible or not
+
+bool valid_send_money(string amount_string, long double *amount, long double Balance)
+{
+	int n = amount_string.size(), i = 0, value = 1;
+	*amount = 0.00;
+
+	if (amount_string[0] == '-')
+		return 0;
+
+	if (n > 11)
+		return 0;
+
+	while (i < n && amount_string[i] == '0')
+		i++;
+
+	if (i == n)
+	{
+		*amount = 0;
+		return 0;
+	}
+	for (int j = n - 1; j >= i; j--)
+	{
+		if (amount_string[j] < '0' || amount_string[j] > '9')
+			return 0;
+		*amount += 1.0 * (value * (int)(amount_string[j] - '0'));
+		value *= 10;
+	}
+	if (*amount > Balance)
+		return 0;
+
+	if (*amount < 1.0)
+		return 0;
+	return 1;
+}
+
+// Function to count leap year from 0 to d
+
+int countLeapYears(date d)
+{
+	int years = d.year;
+
+	if (d.month <= 2)
+		years--;
+
+	return years / 4 - years / 100 + years / 400;
+}
+
+// function to get diffrence between two days
+
+int get_number_of_days(date dt1, date dt2)
+{
+	int monthDays[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	long int n1 = dt1.year * 365 + dt1.day;
+
+	for (int i = 0; i < dt1.month - 1; i++)
+		n1 += monthDays[i];
+
+	n1 += countLeapYears(dt1);
+
+	long int n2 = dt2.year * 365 + dt2.day;
+	for (int i = 0; i < dt2.month - 1; i++)
+		n2 += monthDays[i];
+	n2 += countLeapYears(dt2);
+
+	return (n2 - n1);
+}
+
+// Function to get new Balance of the current account
+
+long double get_new_balance(long double cur_balance, int acc_type, long double vip_rate, int days_spent)
+{
+	cout << fixed << setprecision(10);
+	//show(days_spent);
+	long double year_spent = (1.00 * days_spent) / 365.00;
+	//show(year_spent);
+	if (vip_rate >= 0.00)
+	{
+		// compound interest of vip_rate% per year
+		long double compound_factor = (1.00 + (vip_rate / 100.00));
+		return cur_balance * (long double)pow((double)compound_factor, (double)year_spent);
+	}
+	else if (acc_type == 1)
+	{
+		// simple interest of 6% per year
+		return cur_balance * (1.00 + 0.06 * year_spent);
+	}
+	else if (acc_type == 2)
+	{
+		// compound interest of 10% per year
+		long double compound_factor = 1.1;
+		year_spent = year_spent / 2.0;
+		return cur_balance * pow(compound_factor, (long double)(2.0 * (int)year_spent));
+	}
+	else if (acc_type == 3)
+	{
+		return cur_balance;
+	}
+}
+
+// Function to update a bank account information
+
+bool update_bank_acc_info(BankAccount updated_acc)
+{
+	ifstream get_acc("root.txt");
+	ofstream make_acc("temp.txt");
+	BankAccount temp;
+	while (!get_acc.eof())
+	{
+		get_acc >> temp.AccountNumber >> temp.Password >> temp.FirstName >> temp.LastName >> temp.NID >> temp.PhoneNumber;
+		get_acc >> temp.email >> temp.Balance >> temp.LastTransection >> temp.Rate >> temp.Type >> temp.InitialDate.day;
+		get_acc >> temp.InitialDate.month >> temp.InitialDate.year;
+		get_acc >> temp.MemorableDate.day >> temp.MemorableDate.month >> temp.MemorableDate.year;
+		get_acc >> temp.DateOfBirth.day >> temp.DateOfBirth.month >> temp.DateOfBirth.year;
+		get_acc >> temp.LastTransectionDate.day >> temp.LastTransectionDate.month >> temp.LastTransectionDate.year;
+		if (temp.AccountNumber == updated_acc.AccountNumber)
+		{
+			temp.AccountNumber = updated_acc.AccountNumber;
+			temp.Password = updated_acc.Password;
+			temp.FirstName = updated_acc.FirstName;
+			temp.LastName = updated_acc.LastName;
+			temp.NID = updated_acc.NID;
+			temp.PhoneNumber = updated_acc.PhoneNumber;
+			temp.email = updated_acc.email;
+			temp.Balance = updated_acc.Balance;
+			temp.LastTransection = updated_acc.LastTransection;
+			temp.Rate = updated_acc.Rate;
+			temp.Type = updated_acc.Type;
+			temp.InitialDate.day = updated_acc.InitialDate.day;
+			temp.InitialDate.month = updated_acc.InitialDate.month;
+			temp.InitialDate.year = updated_acc.InitialDate.year;
+			temp.MemorableDate.day = updated_acc.MemorableDate.day;
+			temp.MemorableDate.month = updated_acc.MemorableDate.month;
+			temp.MemorableDate.year = updated_acc.MemorableDate.year;
+			temp.DateOfBirth.day = updated_acc.DateOfBirth.day;
+			temp.DateOfBirth.month = updated_acc.DateOfBirth.month;
+			temp.DateOfBirth.year = updated_acc.DateOfBirth.year;
+			temp.LastTransectionDate.day = updated_acc.LastTransectionDate.day;
+			temp.LastTransectionDate.month = updated_acc.LastTransectionDate.month;
+			temp.LastTransectionDate.year = updated_acc.LastTransectionDate.year;
+		}
+		make_acc << '\n'
+				 << temp.AccountNumber << " " << temp.Password << " " << temp.FirstName
+				 << " " << temp.LastName << " " << temp.NID << " " << temp.PhoneNumber;
+		make_acc << " " << temp.email << " " << fixed << setprecision(2) << temp.Balance << " " << temp.LastTransection
+				 << " " << temp.Rate << " " << temp.Type << " " << temp.InitialDate.day << " ";
+		make_acc << temp.InitialDate.month << " " << temp.InitialDate.year << " ";
+		make_acc << temp.MemorableDate.day << " " << temp.MemorableDate.month << " "
+				 << temp.MemorableDate.year << " " << temp.DateOfBirth.day << " " << temp.DateOfBirth.month
+				 << " " << temp.DateOfBirth.year << " " << temp.LastTransectionDate.day << " ";
+		make_acc << temp.LastTransectionDate.month << " " << temp.LastTransectionDate.year;
+	}
+	get_acc.close();
+	make_acc.close();
+	if (remove("root.txt") != 0)
+		return 0;
+	if (rename("temp.txt", "root.txt") != 0)
+		return 0;
+	return 1;
+}
+
+// Function to update internal reciever's account
+bool update_bank_acc_info_of_internal_reciever(string ac_num, date x, long double amount)
+{
+	ifstream get_acc("root.txt");
+	ofstream make_acc("temp.txt");
+	BankAccount temp;
+	while (!get_acc.eof())
+	{
+		get_acc >> temp.AccountNumber >> temp.Password >> temp.FirstName >> temp.LastName >> temp.NID >> temp.PhoneNumber;
+		get_acc >> temp.email >> temp.Balance >> temp.LastTransection >> temp.Rate >> temp.Type >> temp.InitialDate.day;
+		get_acc >> temp.InitialDate.month >> temp.InitialDate.year;
+		get_acc >> temp.MemorableDate.day >> temp.MemorableDate.month >> temp.MemorableDate.year;
+		get_acc >> temp.DateOfBirth.day >> temp.DateOfBirth.month >> temp.DateOfBirth.year;
+		get_acc >> temp.LastTransectionDate.day >> temp.LastTransectionDate.month >> temp.LastTransectionDate.year;
+		if (temp.AccountNumber == ac_num)
+		{
+			if (!date_diff(x, temp.LastTransectionDate))
+			{
+				cout << "Can not do this transection before " << temp.LastTransectionDate.day << "/";
+				cout << temp.LastTransectionDate.month << "/" << temp.LastTransectionDate.year << endl;
+				get_acc.close();
+				make_acc.close();
+				remove("temp.txt");
+				return 0;
+			}
+			temp.Balance = get_new_balance(temp.Balance, temp.Type, temp.Rate, get_number_of_days(temp.LastTransectionDate, x));
+			temp.Balance = temp.Balance + amount;
+			temp.LastTransection = amount;
+			temp.LastTransectionDate.day = x.day;
+			temp.LastTransectionDate.month = x.month;
+			temp.LastTransectionDate.year = x.year;
+		}
+		make_acc << '\n'
+				 << temp.AccountNumber << " " << temp.Password << " " << temp.FirstName
+				 << " " << temp.LastName << " " << temp.NID << " " << temp.PhoneNumber;
+		make_acc << " " << temp.email << " " << fixed << setprecision(2) << temp.Balance << " " << temp.LastTransection
+				 << " " << temp.Rate << " " << temp.Type << " " << temp.InitialDate.day << " ";
+		make_acc << temp.InitialDate.month << " " << temp.InitialDate.year << " ";
+		make_acc << temp.MemorableDate.day << " " << temp.MemorableDate.month << " "
+				 << temp.MemorableDate.year << " " << temp.DateOfBirth.day << " " << temp.DateOfBirth.month
+				 << " " << temp.DateOfBirth.year << " " << temp.LastTransectionDate.day << " ";
+		make_acc << temp.LastTransectionDate.month << " " << temp.LastTransectionDate.year;
+	}
+	get_acc.close();
+	make_acc.close();
+	if (remove("root.txt") != 0)
+		return 0;
+	if (rename("temp.txt", "root.txt") != 0)
+		return 0;
+	return 1;
+}
+
+// function to send money to an account of this bank
+
+void send_money_to_internal_account(date x, BankAccount temp)
+{
+	clr;
+	trans_initiate_message();
+	string sender, reciever, choice;
+	sender = temp.AccountNumber;
+	while (1)
+	{
+		bool starting = 1;
+		do
+		{
+			if (!starting)
+				cout << "\n\tInvalid Account Number\n";
+			cout << "\tPlease give the account number that you want to sent the money to\n\t";
+			cout << "Press '1' to return to main menu\n";
+			cout << "\n\tEnter the reciever's account number :: ";
+			cin >> reciever;
+			cin.ignore(1000, '\n');
+			if (reciever == "1")
+				return;
+			starting = 0;
+		} while (not_found(reciever) || reciever == sender);
+
+	again:
+		cout << "\tAre you sure to send money to | " << reciever << " | Account";
+		cout << "\n\tpress 'Y' to confirm and press 'N' to again enter reciever account number\n";
+		cout << "\tEnter your choice :: ";
+		cin >> choice;
+		cin.ignore(1000, '\n');
+		if (choice == "YES" || choice == "Y" || choice == "yes" || choice == "Yes" || choice == "y")
+		{
+			break;
+		}
+		else if (choice == "NO" || choice == "N" || choice == "no" || choice == "No" || choice == "n")
+		{
+			continue;
+		}
+		else
+		{
+			cout << "\tInvalid choice\n";
+			goto again;
+		}
+	}
+	cout << "\n\tEnter how much money you want to send | ";
+	cout << "Balance = " << fixed << setprecision(2) << temp.Balance << " |\n";
+	string amount_string;
+	long double amount;
+	bool starter = 1;
+	do
+	{
+		if (!starter)
+		{
+			cout << "\n\tInvalid amount\n\tMust enter integer between ";
+			cout << "1 to " << (long long)temp.Balance << "\n";
+		}
+		cout << "\tEnter the amount you want to send :: ";
+		cin >> amount_string;
+		cin.ignore(1000, '\n');
+		starter = 0;
+	} while (!valid_send_money(amount_string, &amount, temp.Balance));
+	temp.Balance = get_new_balance(temp.Balance, temp.Type, temp.Rate, get_number_of_days(temp.LastTransectionDate, x));
+	//cout << "\t Balance before transection = " << fixed << setprecision(2) << temp.Balance << endl;
+	temp.Balance = temp.Balance - amount;
+	temp.LastTransection = -1.00 * amount;
+	temp.LastTransectionDate.day = x.day;
+	temp.LastTransectionDate.month = x.month;
+	temp.LastTransectionDate.year = x.year;
+	if (!update_bank_acc_info_of_internal_reciever(reciever, x, amount))
+	{
+		cout << "\n\tSomething went wrong...\n\tTRANSECTION FAILED\n";
+		return;
+	}
+	if (!update_bank_acc_info(temp))
+		cout << "\n\tSomething went wrong...\n";
+}
+
+// Function to send money to an external bank accont
+
+void send_money_to_extarnal_account(date x, BankAccount temp)
+{
+	clr;
+	trans_initiate_message();
+	string reciever, choice;
+	while (1)
+	{
+		cout << "\tPlease give the account number that you want to sent the money to\n";
+		cout << "\n\tEnter the reciever's account number :: ";
+		cin >> reciever;
+		cin.ignore(1000, '\n');
+	again:
+		cout << "\tAre you sure to send money to | " << reciever << " | Account";
+		cout << "\n\tpress 'Y' to confirm and press 'N' to again enter reciever account number\n";
+		cout << "\tEnter your choice :: ";
+		cin >> choice;
+		cin.ignore(1000, '\n');
+		if (choice == "YES" || choice == "Y" || choice == "yes" || choice == "Yes" || choice == "y")
+		{
+			break;
+		}
+		else if (choice == "NO" || choice == "N" || choice == "no" || choice == "No" || choice == "n")
+		{
+			continue;
+		}
+		else
+		{
+			cout << "\tInvalid choice\n";
+			goto again;
+		}
+	}
+	cout << "\n\tEnter how much money you want to send | ";
+	cout << "Balance = " << fixed << setprecision(2) << temp.Balance << " |\n";
+	string amount_string;
+	long double amount;
+	bool starter = 1;
+	do
+	{
+		if (!starter)
+		{
+			cout << "\n\tInvalid amount\n\tMust enter integer between ";
+			cout << "1 to " << (long long)temp.Balance << "\n";
+		}
+		cout << "\tEnter the amount you want to send :: ";
+		cin >> amount_string;
+		cin.ignore(1000, '\n');
+		starter = 0;
+	} while (!valid_send_money(amount_string, &amount, temp.Balance));
+	temp.Balance = get_new_balance(temp.Balance, temp.Type, temp.Rate, get_number_of_days(temp.LastTransectionDate, x));
+	//cout << "\t Balance before transection = " << fixed << setprecision(2) << temp.Balance << endl;
+	temp.Balance = temp.Balance - amount;
+	temp.LastTransection = -1.00 * amount;
+	temp.LastTransectionDate.day = x.day;
+	temp.LastTransectionDate.month = x.month;
+	temp.LastTransectionDate.year = x.year;
+	if (!update_bank_acc_info(temp))
+		cout << "\n\tSomething went wrong...\n";
+}
+
+// Function to recieve money from other bank to this account
+
+void recieve_money_from_extarnal_account(date x, BankAccount temp)
+{
+	clr;
+	trans_initiate_message();
+	string sender, choice;
+	while (1)
+	{
+		cout << "\tPlease give the account number from which you will recieve the money\n";
+		cout << "\n\tEnter the sender's account number :: ";
+		cin >> sender;
+		cin.ignore(1000, '\n');
+	again:
+		cout << "\tAre you sure to recieve money from | " << sender << " | Account";
+		cout << "\n\tpress 'Y' to confirm and press 'N' to again enter sender account number\n";
+		cout << "\tEnter your choice :: ";
+		cin >> choice;
+		cin.ignore(1000, '\n');
+		if (choice == "YES" || choice == "Y" || choice == "yes" || choice == "Yes" || choice == "y")
+		{
+			break;
+		}
+		else if (choice == "NO" || choice == "N" || choice == "no" || choice == "No" || choice == "n")
+		{
+			continue;
+		}
+		else
+		{
+			cout << "\tInvalid choice\n";
+			goto again;
+		}
+	}
+	cout << "\n\tEnter how much money you will recieve\n";
+	string amount_string;
+	long double amount;
+	long long max_amount = 999999999;
+	bool starter = 1;
+	do
+	{
+		if (!starter)
+		{
+			cout << "\n\tInvalid amount\n\tMust enter integer between ";
+			cout << "1 to " << max_amount << "\n";
+		}
+		cout << "\tEnter the amount you will to recieve :: ";
+		cin >> amount_string;
+		cin.ignore(1000, '\n');
+		starter = 0;
+	} while (!valid_send_money(amount_string, &amount, max_amount));
+	temp.Balance = get_new_balance(temp.Balance, temp.Type, temp.Rate, get_number_of_days(temp.LastTransectionDate, x));
+	//cout << "\t Balance before transection = " << fixed << setprecision(2) << temp.Balance << endl;
+	temp.Balance = temp.Balance + amount;
+	temp.LastTransection = amount;
+	temp.LastTransectionDate.day = x.day;
+	temp.LastTransectionDate.month = x.month;
+	temp.LastTransectionDate.year = x.year;
+	if (!update_bank_acc_info(temp))
+		cout << "\n\tSomething went wrong...\n";
+}
+
+// Function to transfer money from one account given to another unknown
+
+void transection_from_this_account(BankAccount temp)
+{
+	load();
+	trans_initiate_message();
+	cout << "\tDear " << temp.FirstName << " " << temp.LastName << ",\n\t";
+	cout << "We need to know the date of transection.\n\t";
+	cout << "Press '1' to return to main menu\n\n\t";
+	bool starter = 1;
+	string date_input_string;
+	date x;
+	do
+	{
+		if (!starter)
+		{
+			cout << "\n\tINVALID DATE( date format : **/**/**** )";
+			cout << "\n\t The date should be a valid day between 1900-2100\n";
+		}
+		cout << "\n\tEnter the Date of transection ( example : 01/05/1995 )\n\t>>> ";
+		cin >> date_input_string;
+		if (date_input_string == "1")
+			return;
+		cin.ignore(1000, '\n');
+		starter = 0;
+		if (nice_date(date_input_string, &x))
+		{
+			if (date_diff(x, temp.LastTransectionDate))
+				break;
+			else
+			{
+				cout << "\tYou cannot do this transection transection before | " << temp.LastTransectionDate.day;
+				cout << "/" << temp.LastTransectionDate.month << "/" << temp.LastTransectionDate.year << " |\n";
+			}
+		}
+	} while (1);
+	cout << "\n\tYou can do any of the following transections : \n\n";
+	cout << "\t1 >>> Send money to another account of this bank\n";
+	cout << "\t2 >>> Recieve money from an account outside of this bank\n";
+	cout << "\t3 >>> Send money to an account outside of this bank\n";
+	bool first = 1;
+	int inpt;
+	string choice;
+	do
+	{
+		if (!first)
+			cout << "\tINVALID CHOICE\n";
+		cout << "\n\tChoose one from above. Press ( 1 / 2 / 3 )\n\t>>> ";
+		cin >> choice;
+		cin.ignore(1000, '\n');
+		first = 0;
+	} while (!valid_acc_type(choice, &inpt));
+	if (inpt == 1)
+		send_money_to_internal_account(x, temp);
+	else if (inpt == 2)
+		recieve_money_from_extarnal_account(x, temp);
+	else if (inpt == 3)
+		send_money_to_extarnal_account(x, temp);
+	cout << "\n\tPress Enter to continue... ";
+	getchar();
+}
+
+// Function to complete transection between two distinct account
+
+void transection()
+{
+	load();
+	trans_initiate_message();
+	cout << "\tWelcome to the transection mode.\n\n\t";
+	cout << "Please Enter Your Account number to continue...\n\n\t";
+	string ac_num;
+	bool starting = 1;
+	do
+	{
+		if (!starting)
+			cout << "\n\tInvalid Account Number\n\t";
+		cout << "Press '1' to return to main menu\n";
+		cout << "\tEnter your Account number ::  ";
+		cin >> ac_num;
+		cin.ignore(1000, '\n');
+		if (ac_num == "1")
+			return;
+		starting = 0;
+	} while (not_found(ac_num));
+	ifstream get_acc("root.txt");
+	BankAccount temp;
+	while (!get_acc.eof())
+	{
+		get_acc >> temp.AccountNumber >> temp.Password >> temp.FirstName >> temp.LastName >> temp.NID >> temp.PhoneNumber;
+		get_acc >> temp.email >> temp.Balance >> temp.LastTransection >> temp.Rate >> temp.Type >> temp.InitialDate.day;
+		get_acc >> temp.InitialDate.month >> temp.InitialDate.year;
+		get_acc >> temp.MemorableDate.day >> temp.MemorableDate.month >> temp.MemorableDate.year >> temp.DateOfBirth.day >> temp.DateOfBirth.month >> temp.DateOfBirth.year;
+		get_acc >> temp.LastTransectionDate.day >> temp.LastTransectionDate.month >> temp.LastTransectionDate.year;
+		if (temp.AccountNumber == ac_num)
+		{
+			string passwrd;
+			get_acc.close();
+			cout << "\n\n\tCongratulation!\n\tAccount Number :: | " << ac_num << " | is Found\n\t";
+			cout << "Welcome, " << temp.FirstName << " " << temp.LastName << "\n";
+			cout << "\n\tEnter You Password to get logged in to your account\n";
+			starting = 1;
+			int try_left = 5;
+			do
+			{
+				if (try_left == 0)
+				{
+					cout << "\n\tSORRY! All your tries are gone\n\n\t";
+					cout << "Press Enter to continue...";
+					getchar();
+					return;
+				}
+				if (!starting)
+					cout << "\tSORRY! Password Didn't Matched\n\tTry Again\n";
+				cout << "\n \tPress '1' to return to the main menu\n\t";
+				cout << try_left-- << " tries left :)\n";
+				cout << "\n\tEnter your password :: ";
+				cin >> passwrd;
+				cin.ignore(1000, '\n');
+				if (passwrd == "1")
+					return;
+				starting = 0;
+			} while (passwrd != temp.Password);
+			cout << "\n\tCongratulation! Password is matched\n\n\t";
+			cout << "Press enter to continue... ";
+			getchar();
+			transection_from_this_account(temp);
 			return;
 		}
 	}

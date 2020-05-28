@@ -1,0 +1,69 @@
+In this section I will let the user to change some info.
+Firstly I will let the user to change the password.
+In the change password function. I will first ask for:
+- MemorableDate
+- LastTransection
+Then I will let him Change the following:
+1. First Name      : Minhaz
+2. Last Name       : Dhrouvo
+3. Contact Number  : +8801613112522
+4. Email Address   : minhaz@gmail.com
+5. Memorable Date  : 1/1/2019
+
+code:
+string choice;
+bool starter;
+while(1){
+	clr;
+	cout<<"\t1. First Name      : "<<temp.FirstName<<endl;
+	cout<<"\t2. Last Name       : "<<temp.LastName<<endl;
+	cout<<"\t3. Contact Number  : "<<temp.PhoneNumber<<endl;	
+	cout<<"\t4. Email Address   : "<<temp.email<<endl;
+	cout<<"\t5. Memorable Date  : "<<temp.MemorableDate.day<<"/"<<temp.MemorableDate.month<<"/"<<temp.MemorableDate.year<<endl;
+cout<<"\n\n\tChoose which one of the above info you want to change...\n\t";
+cout<<"AND PRESS 6 to save the cnages and return to the main menu\n\n\t";
+	starter=1;
+	do{
+		if(!starter){
+			cout<<"\n\tINVAILD CHOICE\n\t";
+			cout<<"You must enter an integer between (1-6)\n\n\t";
+		}
+		cout<<"Enter your choice : ";
+		cin>>choice;
+		cin.ignre(1000,'\n');
+		starter = 0;
+	}while(!valid_choice_cng(choice));
+	if(s=="1") {
+		cout<<"\n\tEnter New First Name : ";
+		cin>>temp.FirstName;
+		cin.ignore(1000,'\n');
+		cout<<"\n\n\tYour First name successfully changed to "<<temp.FirstName;
+		cout<<"\n\n\tPress ENTER to contine... ";
+		getchar();
+	}
+	else if(s=="2") {
+		cout<<"\n\tEnter New Last Name : ";
+		cin>>temp.LastName;
+		cin.ignore(1000,'\n');
+		cout<<"\n\n\tYour Last name successfully changed to "<<temp.LastName;
+		cout<<"\n\n\tPress ENTER to contine... ";
+		getchar();
+	}
+	else if(s=="3") {}
+	else if(s=="4") {}
+	else if(s=="5") {}
+	else if(s=="6") {return;}
+}
+
+bool valid_choice_cng(string s){
+	if(s=="1") return 1;
+	if(s=="2") return 1;
+	if(s=="3") return 1;
+	if(s=="4") return 1;
+	if(s=="5") return 1;
+	if(s=="6") return 1;
+	return 0;
+}
+
+
+

@@ -113,6 +113,10 @@ bool update_bank_acc_info(BankAccount updated_acc);
 void recieve_money_from_extarnal_account(date x, BankAccount temp);
 void send_money_to_internal_account(date x, BankAccount temp);
 bool update_bank_acc_info_of_internal_reciever(string ac_num, date x, long double amount);
+void edit_user_info();
+bool valid_choice_cng(string s);
+void edit_info_message();
+void forget_password();
 
 /// The main Function
 
@@ -129,6 +133,8 @@ int main()
 			Show_Statement();
 		else if (menu_choice_num == 3)
 			transection();
+		else if (menu_choice_num == 6)
+			edit_user_info();
 		else if (menu_choice_num == 9)
 			break;
 	}
@@ -1339,6 +1345,156 @@ bool not_found(string s)
 	return 1;
 }
 
+// Function to reset ueser password
+
+void forget_password()
+{
+	load();
+	cout << "\n\n\tWelcome to the password recovery mode\n\n\t";
+	cout << "Please enter your Account Number to continue...\n\n\t";
+	string ac_num, name;
+	bool starting = 1;
+	do
+	{
+		if (!starting)
+			cout << "\n\tInvalid Account Number\n\t";
+		cout << "Press '1' to return to main menu\n";
+		cout << "\tEnter your Account number ::  ";
+		cin >> ac_num;
+		cin.ignore(1000, '\n');
+		if (ac_num == "1")
+			return;
+		starting = 0;
+	} while (not_found(ac_num));
+	ifstream get_acc("root.txt");
+	BankAccount temp;
+	while (!get_acc.eof())
+	{
+		get_acc >> temp.AccountNumber >> temp.Password >> temp.FirstName >> temp.LastName >> temp.NID >> temp.PhoneNumber;
+		get_acc >> temp.email >> temp.Balance >> temp.LastTransection >> temp.Rate >> temp.Type >> temp.InitialDate.day;
+		get_acc >> temp.InitialDate.month >> temp.InitialDate.year;
+		get_acc >> temp.MemorableDate.day >> temp.MemorableDate.month >> temp.MemorableDate.year >> temp.DateOfBirth.day >> temp.DateOfBirth.month >> temp.DateOfBirth.year;
+		get_acc >> temp.LastTransectionDate.day >> temp.LastTransectionDate.month >> temp.LastTransectionDate.year;
+		if (temp.AccountNumber == ac_num)
+		{
+			get_acc.close();
+			cout << "\n\n\tCongratulation!\n\tAccount Number :: | " << ac_num << " | is Found\n\t";
+			cout << "Welcome, " << temp.FirstName << " " << temp.LastName << "\n";
+			cout << "\n\tEnter Your most memorable date\n";
+			date x;
+			bool starter = 1;
+			do
+			{
+				if (!starter)
+				{
+					cout << "\n\tINVALID DATE( date format : **/**/**** )";
+					cout << "\n\t The date should be a valid day between 1900-2100\n";
+				}
+				cout << "\n\tEnter Your Most memorable date ( example : 01/05/1995 )\n\t>>> ";
+				cin >> name;
+				if (name == "1")
+					return;
+				cin.ignore(1000, '\n');
+				starter = 0;
+			} while (!nice_date(name, &x));
+			if (x.day == temp.MemorableDate.day && x.month == temp.MemorableDate.month && x.year == temp.MemorableDate.year)
+			{
+				cout << "\n\tEnter the amount of your last transection in this account\n\n";
+				string amount_string;
+				long double amount;
+				long long max_amount = 999999999;
+				starter = 1;
+				do
+				{
+					if (!starter)
+					{
+						cout << "\n\tInvalid amount\n\tMust enter integer between ";
+						cout << "1 to " << max_amount << "\n";
+					}
+					cout << "\tEnter the Last Transection amount :: ";
+					cin >> amount_string;
+					cin.ignore(1000, '\n');
+					starter = 0;
+				} while (!valid_send_money(amount_string, &amount, max_amount));
+				if ((long long)amount == temp.LastTransection)
+				{
+					cout << "\n\n\tCONGRATULATION! Your authentication is completed\n\n\t";
+					cout << "Now you can change your password\n\n\t";
+					int error_msg = 0;
+					string passA, passB;
+					cout << "Try to choose a strong password for your account."
+						 << "\n\tMinimum criteria given below :\n";
+					cout << "\t- Password must contain at least 6 charecters\n";
+					cout << "\t- Password must contain at least 1 number 0-9\n";
+					cout << "\t- Password must contain at least 1 Uppercase Letter (A-Z)\n";
+					cout << "\t- Password must contain at least 1 Lowercase Letter (a-z)\n";
+					cout << "\n\tPress '1' to return to the main menun\n\n";
+					do
+					{
+						if (error_msg == 1)
+							cout << "\n\tPASSWORD DIDN'T MATCHED\n\tTRY AGAIN\n";
+						else if (error_msg == 2)
+						{
+							cout << "\n\tPASSWORD's LENGTH MUST BE AT LEAST 6\n\t";
+							cout << "Your given password's length was " << passA.size();
+							cout << "( less than 6 )\n\tTRY AGAIN\n";
+						}
+						else if (error_msg == 3)
+						{
+							cout << "\n\tPASSWORD MUST HAVE AT LEAST A NUMBER (0-9)\n\t";
+							cout << "Your given password " << passA << " don't have a ";
+							cout << "number\n\tTRY AGAIN\n";
+						}
+						else if (error_msg == 4)
+						{
+							cout << "\n\tPASSWORD MUST HAVE AT LEAST A LOWER CASE LETTER (a-z)\n\t";
+							cout << "Your given password " << passA << " don't have a ";
+							cout << "lowercase letter\n\tTRY AGAIN\n";
+						}
+						else if (error_msg == 5)
+						{
+							cout << "\n\tPASSWORD MUST HAVE AT LEAST AN UPPER CASE LETTER (A-Z)\n\t";
+							cout << "Your given password " << passA << " don't have an ";
+							cout << "uppercase letter\n\tTRY AGAIN\n";
+						}
+						cout << "\tEnter Your password :: ";
+						cin >> passA;
+						if (passA == "1")
+							return;
+						cin.ignore(1000, '\n');
+						cout << "\tConfirm Your password :: ";
+						cin >> passB;
+						if (passB == "1")
+							return;
+						cin.ignore(1000, '\n');
+					} while (!chk_pass_ok_or_not(passA, passB, &error_msg));
+					temp.Password = passA;
+					update_bank_acc_info(temp);
+					cout << "\n\tCongratulation !!!";
+					cout << "\n\tPassword is changed successfully\n";
+					cout << "\tPlease remember '" << temp.Password << "' as your";
+					cout << " password for future use.\n\n\tPress Enter to continue... ";
+					getchar();
+				}
+				else
+				{
+					cout << "\tSORRY! Password recovery Failed\n\t";
+					cout << "Press enter to continue... ";
+					getchar();
+				}
+				return;
+			}
+			else
+			{
+				cout << "\tSORRY! Password recovery Failed\n\t";
+				cout << "Press enter to continue... ";
+				getchar();
+				return;
+			}
+		}
+	}
+}
+
 // Function to show the statement AKA Dashbord
 
 void Show_dashboard(BankAccount temp)
@@ -2025,6 +2181,213 @@ void transection()
 			cout << "Press enter to continue... ";
 			getchar();
 			transection_from_this_account(temp);
+			return;
+		}
+	}
+}
+
+// function to check for valid choice in the update user info mode
+
+bool valid_choice_cng(string s)
+{
+	if (s == "1")
+		return 1;
+	if (s == "2")
+		return 1;
+	if (s == "3")
+		return 1;
+	if (s == "4")
+		return 1;
+	if (s == "5")
+		return 1;
+	if (s == "6")
+		return 1;
+	return 0;
+}
+
+// function to show initiate message for update user info mode
+
+void edit_info_message()
+{
+	clr;
+	pf('\n', 2);
+	cout << " |";
+	pf('_', 30);
+	cout << "| EDIT INFO MODE |";
+	pf('_', 30);
+	cout << "|\n\n";
+}
+
+// function to edit user information
+
+void edit_user_info()
+{
+	load();
+	edit_info_message();
+	cout << "\tWelcome to the information editing mode.\n\n\t";
+	cout << "Please Enter Your Account number to continue...\n\n\t";
+	string ac_num;
+	bool starting = 1;
+	do
+	{
+		if (!starting)
+			cout << "\n\tInvalid Account Number\n\t";
+		cout << "Press '1' to return to main menu\n";
+		cout << "\tEnter your Account number ::  ";
+		cin >> ac_num;
+		cin.ignore(1000, '\n');
+		if (ac_num == "1")
+			return;
+		starting = 0;
+	} while (not_found(ac_num));
+	ifstream get_acc("root.txt");
+	BankAccount temp;
+	while (!get_acc.eof())
+	{
+		get_acc >> temp.AccountNumber >> temp.Password >> temp.FirstName >> temp.LastName >> temp.NID >> temp.PhoneNumber;
+		get_acc >> temp.email >> temp.Balance >> temp.LastTransection >> temp.Rate >> temp.Type >> temp.InitialDate.day;
+		get_acc >> temp.InitialDate.month >> temp.InitialDate.year;
+		get_acc >> temp.MemorableDate.day >> temp.MemorableDate.month >> temp.MemorableDate.year >> temp.DateOfBirth.day >> temp.DateOfBirth.month >> temp.DateOfBirth.year;
+		get_acc >> temp.LastTransectionDate.day >> temp.LastTransectionDate.month >> temp.LastTransectionDate.year;
+		if (temp.AccountNumber == ac_num)
+		{
+			string passwrd;
+			get_acc.close();
+			cout << "\n\n\tCongratulation!\n\tAccount Number :: | " << ac_num << " | is Found\n\t";
+			cout << "Welcome, " << temp.FirstName << " " << temp.LastName << "\n";
+			cout << "\n\tEnter You Password to get logged in to your account\n";
+			starting = 1;
+			int try_left = 5;
+			do
+			{
+				if (try_left == 0)
+				{
+					cout << "\n\tSORRY! All your tries are gone\n\n\t";
+					cout << "Press Enter to continue...";
+					getchar();
+					return;
+				}
+				if (!starting)
+					cout << "\tSORRY! Password Didn't Matched\n\tTry Again\n";
+				cout << "\n \tPress '1' to return to the main menu\n\t";
+				cout << "press '2' to reset the password\n\t";
+				cout << try_left-- << " tries left :)\n";
+				cout << "\n\tEnter your password :: ";
+				cin >> passwrd;
+				cin.ignore(1000, '\n');
+				if (passwrd == "1")
+					return;
+				if (passwrd == "2")
+				{
+					forget_password();
+					return;
+				}
+				starting = 0;
+			} while (passwrd != temp.Password);
+			cout << "\n\tCongratulation! Password is matched\n\n\t";
+			cout << "Press enter to continue... ";
+			getchar();
+			string choice;
+			bool starter;
+			while (1)
+			{
+				edit_info_message();
+				cout << "\t1. First Name      : " << temp.FirstName << endl;
+				cout << "\t2. Last Name       : " << temp.LastName << endl;
+				cout << "\t3. Contact Number  : " << temp.PhoneNumber << endl;
+				cout << "\t4. Email Address   : " << temp.email << endl;
+				cout << "\t5. Memorable Date  : " << temp.MemorableDate.day << "/" << temp.MemorableDate.month << "/" << temp.MemorableDate.year << endl;
+				cout << "\t6. Save and EXIT to the main menu\n";
+
+				cout << "\n\n\tChoose which one of the above info you want to change...\n\t";
+				cout << "AND PRESS 6 to save the cnages and return to the main menu\n\n\t";
+				starter = 1;
+				do
+				{
+					if (!starter)
+					{
+						cout << "\n\tINVAILD CHOICE\n\t";
+						cout << "You must enter an integer between (1-6)\n\n\t";
+					}
+					cout << "Enter your choice : ";
+					cin >> choice;
+					cin.ignore(1000, '\n');
+					starter = 0;
+				} while (!valid_choice_cng(choice));
+				if (choice == "1")
+				{
+					cout << "\n\tEnter New First Name : ";
+					cin >> temp.FirstName;
+					cin.ignore(1000, '\n');
+					cout << "\n\n\tYour First name successfully changed to " << temp.FirstName;
+					cout << "\n\n\tPress ENTER to contine... ";
+					getchar();
+				}
+				else if (choice == "2")
+				{
+					cout << "\n\tEnter New Last Name : ";
+					cin >> temp.LastName;
+					cin.ignore(1000, '\n');
+					cout << "\n\n\tYour Last name successfully changed to " << temp.LastName;
+					cout << "\n\n\tPress ENTER to contine... ";
+					getchar();
+				}
+				else if (choice == "3")
+				{
+					string name;
+					starter = 1;
+					do
+					{
+						if (!starter)
+							cout << "\n\tINVALID Phone Number( Should have only digits 0-9 )";
+						cout << "\n\tEnter your new Phone number :: +";
+						cin >> name;
+						cin.ignore(1000, '\n');
+						starter = 0;
+					} while (!correct_phone_number(name));
+					temp.PhoneNumber = "+";
+					temp.PhoneNumber += name;
+				}
+				else if (choice == "4")
+				{
+					string name;
+					starter = 1;
+					do
+					{
+						if (!starter)
+							cout << "\n\tINVALID email address\n\tTRY AGAIN";
+						cout << "\n\tYour email address :: ";
+						cin >> name;
+						cin.ignore(1000, '\n');
+						starter = 0;
+					} while (!correct_email_address(name));
+					temp.email = name;
+				}
+				else if (choice == "5")
+				{
+					date x;
+					string name;
+					starter = 1;
+					do
+					{
+						if (!starter)
+						{
+							cout << "\n\tINVALID DATE( date format : **/**/**** )";
+							cout << "\n\t The date should be a valid day between 1900-2100\n";
+						}
+						cout << "\n\tEnter Your New Most memorable date ( example : 01/05/1995 )\n\t>>> ";
+						cin >> name;
+						cin.ignore(1000, '\n');
+						starter = 0;
+					} while (!nice_date(name, &x));
+					temp.MemorableDate = x;
+				}
+				else if (choice == "6")
+				{
+					update_bank_acc_info(temp);
+					return;
+				}
+			}
 			return;
 		}
 	}

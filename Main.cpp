@@ -117,6 +117,10 @@ void edit_user_info();
 bool valid_choice_cng(string s);
 void edit_info_message();
 void forget_password();
+void pay_bill();
+void pay_bill_from_this_account(BankAccount temp);
+void pay_bill_at_this_date(date x, BankAccount temp);
+void pay_bill_initiate_message();
 
 /// The main Function
 
@@ -135,6 +139,8 @@ int main()
 			transection();
 		else if (menu_choice_num == 6)
 			edit_user_info();
+		else if (menu_choice_num == 7)
+			pay_bill();
 		else if (menu_choice_num == 9)
 			break;
 	}
@@ -1611,13 +1617,19 @@ void Show_Statement()
 				}
 				if (!starting)
 					cout << "\tSORRY! Password Didn't Matched\n\tTry Again\n";
-				cout << "\n \tPress '1' to return to the main menu\n\t";
+				cout << "\n\tPress '1' to return to the main menu\n\t";
+				cout << "Press '2' to recover your password\n\t";
 				cout << try_left-- << " tries left :)\n";
 				cout << "\n\tEnter your password :: ";
 				cin >> passwrd;
 				cin.ignore(1000, '\n');
 				if (passwrd == "1")
 					return;
+				if (passwrd == "2")
+				{
+					forget_password();
+					return;
+				}
 				starting = 0;
 			} while (passwrd != temp.Password);
 			cout << "\n\tCongratulation! Password is matched\n\n\t";
@@ -1862,6 +1874,7 @@ void send_money_to_internal_account(date x, BankAccount temp)
 	clr;
 	trans_initiate_message();
 	string sender, reciever, choice;
+	temp.Balance = get_new_balance(temp.Balance, temp.Type, temp.Rate, get_number_of_days(temp.LastTransectionDate, x));
 	sender = temp.AccountNumber;
 	while (1)
 	{
@@ -1910,14 +1923,13 @@ void send_money_to_internal_account(date x, BankAccount temp)
 		if (!starter)
 		{
 			cout << "\n\tInvalid amount\n\tMust enter integer between ";
-			cout << "1 to " << (long long)temp.Balance << "\n";
+			cout << "1 to " << (long long)floor(temp.Balance) << "\n";
 		}
 		cout << "\tEnter the amount you want to send :: ";
 		cin >> amount_string;
 		cin.ignore(1000, '\n');
 		starter = 0;
 	} while (!valid_send_money(amount_string, &amount, temp.Balance));
-	temp.Balance = get_new_balance(temp.Balance, temp.Type, temp.Rate, get_number_of_days(temp.LastTransectionDate, x));
 	//cout << "\t Balance before transection = " << fixed << setprecision(2) << temp.Balance << endl;
 	temp.Balance = temp.Balance - amount;
 	temp.LastTransection = -1.00 * amount;
@@ -1940,6 +1952,7 @@ void send_money_to_extarnal_account(date x, BankAccount temp)
 	clr;
 	trans_initiate_message();
 	string reciever, choice;
+	temp.Balance = get_new_balance(temp.Balance, temp.Type, temp.Rate, get_number_of_days(temp.LastTransectionDate, x));
 	while (1)
 	{
 		cout << "\tPlease give the account number that you want to sent the money to\n";
@@ -1976,14 +1989,13 @@ void send_money_to_extarnal_account(date x, BankAccount temp)
 		if (!starter)
 		{
 			cout << "\n\tInvalid amount\n\tMust enter integer between ";
-			cout << "1 to " << (long long)temp.Balance << "\n";
+			cout << "1 to " << (long long)floor(temp.Balance) << "\n";
 		}
 		cout << "\tEnter the amount you want to send :: ";
 		cin >> amount_string;
 		cin.ignore(1000, '\n');
 		starter = 0;
 	} while (!valid_send_money(amount_string, &amount, temp.Balance));
-	temp.Balance = get_new_balance(temp.Balance, temp.Type, temp.Rate, get_number_of_days(temp.LastTransectionDate, x));
 	//cout << "\t Balance before transection = " << fixed << setprecision(2) << temp.Balance << endl;
 	temp.Balance = temp.Balance - amount;
 	temp.LastTransection = -1.00 * amount;
@@ -2168,13 +2180,19 @@ void transection()
 				}
 				if (!starting)
 					cout << "\tSORRY! Password Didn't Matched\n\tTry Again\n";
-				cout << "\n \tPress '1' to return to the main menu\n\t";
+				cout << "\n\tPress '1' to return to the main menu\n\t";
+				cout << "Press '2' to recover your password\n\t";
 				cout << try_left-- << " tries left :)\n";
 				cout << "\n\tEnter your password :: ";
 				cin >> passwrd;
 				cin.ignore(1000, '\n');
 				if (passwrd == "1")
 					return;
+				if (passwrd == "2")
+				{
+					forget_password();
+					return;
+				}
 				starting = 0;
 			} while (passwrd != temp.Password);
 			cout << "\n\tCongratulation! Password is matched\n\n\t";
@@ -2388,6 +2406,196 @@ void edit_user_info()
 					return;
 				}
 			}
+			return;
+		}
+	}
+}
+
+// function to show initiate bill message
+
+void pay_bill_initiate_message()
+{
+	clr;
+	pf('\n', 2);
+	cout << " |";
+	pf('_', 30);
+	cout << "| PAY BILL MODE |";
+	pf('_', 30);
+	cout << "|\n\n";
+}
+
+// function to pay bill from a user at a x date
+
+void pay_bill_at_this_date(date x, BankAccount temp)
+{
+	clr;
+	pay_bill_initiate_message();
+	string reciever, choice;
+	temp.Balance = get_new_balance(temp.Balance, temp.Type, temp.Rate, get_number_of_days(temp.LastTransectionDate, x));
+	while (1)
+	{
+		cout << "\tPlease give the merchant account number that you want to sent the money to\n";
+		cout << "\n\tEnter the merchant's account number :: ";
+		cin >> reciever;
+		cin.ignore(1000, '\n');
+	again:
+		cout << "\tAre you sure to send money to | " << reciever << " | Account";
+		cout << "\n\tpress 'Y' to confirm and press 'N' to again enter reciever account number\n";
+		cout << "\tEnter your choice :: ";
+		cin >> choice;
+		cin.ignore(1000, '\n');
+		if (choice == "YES" || choice == "Y" || choice == "yes" || choice == "Yes" || choice == "y")
+		{
+			break;
+		}
+		else if (choice == "NO" || choice == "N" || choice == "no" || choice == "No" || choice == "n")
+		{
+			continue;
+		}
+		else
+		{
+			cout << "\tInvalid choice\n";
+			goto again;
+		}
+	}
+	cout << "\n\tEnter how much money you want to send | ";
+	cout << "Balance = " << fixed << setprecision(2) << temp.Balance << " |\n";
+	string amount_string;
+	long double amount;
+	bool starter = 1;
+	do
+	{
+		if (!starter)
+		{
+			cout << "\n\tInvalid amount\n\tMust enter integer between ";
+			cout << "1 to " << (long long)floor(temp.Balance) << "\n";
+		}
+		cout << "\tEnter the amount you want to send :: ";
+		cin >> amount_string;
+		cin.ignore(1000, '\n');
+		starter = 0;
+	} while (!valid_send_money(amount_string, &amount, temp.Balance));
+	//cout << "\t Balance before transection = " << fixed << setprecision(2) << temp.Balance << endl;
+	temp.Balance = temp.Balance - amount;
+	temp.LastTransection = -1.00 * amount;
+	temp.LastTransectionDate.day = x.day;
+	temp.LastTransectionDate.month = x.month;
+	temp.LastTransectionDate.year = x.year;
+	if (!update_bank_acc_info(temp))
+		cout << "\n\tSomething went wrong...\n";
+}
+
+// Function to pay bill from this account
+
+void pay_bill_from_this_account(BankAccount temp)
+{
+	load();
+	pay_bill_initiate_message();
+	cout << "\tDear " << temp.FirstName << " " << temp.LastName << ",\n\t";
+	cout << "We need to know the date of bill payment.\n\t";
+	cout << "Press '1' to return to main menu\n\n\t";
+	bool starter = 1;
+	string date_input_string;
+	date x;
+	do
+	{
+		if (!starter)
+		{
+			cout << "\n\tINVALID DATE( date format : **/**/**** )";
+			cout << "\n\t The date should be a valid day between 1900-2100\n";
+		}
+		cout << "\n\tEnter the Date of bill payment ( example : 01/05/1995 )\n\t>>> ";
+		cin >> date_input_string;
+		if (date_input_string == "1")
+			return;
+		cin.ignore(1000, '\n');
+		starter = 0;
+		if (nice_date(date_input_string, &x))
+		{
+			if (date_diff(x, temp.LastTransectionDate))
+				break;
+			else
+			{
+				cout << "\tYou cannot do this transection transection before | " << temp.LastTransectionDate.day;
+				cout << "/" << temp.LastTransectionDate.month << "/" << temp.LastTransectionDate.year << " |\n";
+			}
+		}
+	} while (1);
+	pay_bill_at_this_date(x, temp);
+	cout << "\n\tPress Enter to continue... ";
+	getchar();
+}
+
+// Function to initiate pay bill
+
+void pay_bill()
+{
+	load();
+	pay_bill_initiate_message();
+	cout << "\tWelcome to the pay bill mode.\n\n\t";
+	cout << "Please Enter Your Account number to continue...\n\n\t";
+	string ac_num;
+	bool starting = 1;
+	do
+	{
+		if (!starting)
+			cout << "\n\tInvalid Account Number\n\t";
+		cout << "Press '1' to return to main menu\n";
+		cout << "\tEnter your Account number ::  ";
+		cin >> ac_num;
+		cin.ignore(1000, '\n');
+		if (ac_num == "1")
+			return;
+		starting = 0;
+	} while (not_found(ac_num));
+	ifstream get_acc("root.txt");
+	BankAccount temp;
+	while (!get_acc.eof())
+	{
+		get_acc >> temp.AccountNumber >> temp.Password >> temp.FirstName >> temp.LastName >> temp.NID >> temp.PhoneNumber;
+		get_acc >> temp.email >> temp.Balance >> temp.LastTransection >> temp.Rate >> temp.Type >> temp.InitialDate.day;
+		get_acc >> temp.InitialDate.month >> temp.InitialDate.year;
+		get_acc >> temp.MemorableDate.day >> temp.MemorableDate.month >> temp.MemorableDate.year >> temp.DateOfBirth.day >> temp.DateOfBirth.month >> temp.DateOfBirth.year;
+		get_acc >> temp.LastTransectionDate.day >> temp.LastTransectionDate.month >> temp.LastTransectionDate.year;
+		if (temp.AccountNumber == ac_num)
+		{
+			string passwrd;
+			get_acc.close();
+			cout << "\n\n\tCongratulation!\n\tAccount Number :: | " << ac_num << " | is Found\n\t";
+			cout << "Welcome, " << temp.FirstName << " " << temp.LastName << "\n";
+			cout << "\n\tEnter You Password to get logged in to your account\n";
+			starting = 1;
+			int try_left = 5;
+			do
+			{
+				if (try_left == 0)
+				{
+					cout << "\n\tSORRY! All your tries are gone\n\n\t";
+					cout << "Press Enter to continue...";
+					getchar();
+					return;
+				}
+				if (!starting)
+					cout << "\tSORRY! Password Didn't Matched\n\tTry Again\n";
+				cout << "\n\tPress '1' to return to the main menu\n\t";
+				cout << "Press '2' to recover your password\n\t";
+				cout << try_left-- << " tries left :)\n";
+				cout << "\n\tEnter your password :: ";
+				cin >> passwrd;
+				cin.ignore(1000, '\n');
+				if (passwrd == "1")
+					return;
+				if (passwrd == "2")
+				{
+					forget_password();
+					return;
+				}
+				starting = 0;
+			} while (passwrd != temp.Password);
+			cout << "\n\tCongratulation! Password is matched\n\n\t";
+			cout << "Press enter to continue... ";
+			getchar();
+			pay_bill_from_this_account(temp);
 			return;
 		}
 	}

@@ -121,6 +121,8 @@ void pay_bill();
 void pay_bill_from_this_account(BankAccount temp);
 void pay_bill_at_this_date(date x, BankAccount temp);
 void pay_bill_initiate_message();
+void show_bank_status();
+void get_num_of_acc(int *savings_acc, int *fdr_acc, int *buss_acc, int *vip_acc, long double *tot);
 
 /// The main Function
 
@@ -137,6 +139,8 @@ int main()
 			Show_Statement();
 		else if (menu_choice_num == 3)
 			transection();
+		else if (menu_choice_num == 5)
+			show_bank_status();
 		else if (menu_choice_num == 6)
 			edit_user_info();
 		else if (menu_choice_num == 7)
@@ -163,6 +167,7 @@ void load()
 		printf("%c", 177);
 	}
 	clr;
+	return;
 	pf("\n", 10);
 	pf("\t", 3);
 	printf("  ~~~ DONE LOADING ~~~\n\n\t\t   ");
@@ -2599,4 +2604,97 @@ void pay_bill()
 			return;
 		}
 	}
+}
+
+// Function to get all the bank info
+
+void get_num_of_acc(int *savings_acc, int *fdr_acc, int *buss_acc, int *vip_acc, long double *tot)
+{
+	(*savings_acc) = (*fdr_acc) = (*buss_acc) = (*vip_acc) = 0;
+	(*tot) = 0.0;
+	ifstream get_acc("root.txt");
+	BankAccount temp;
+	while (!get_acc.eof())
+	{
+		get_acc >> temp.AccountNumber >> temp.Password >> temp.FirstName >> temp.LastName >> temp.NID >> temp.PhoneNumber;
+		get_acc >> temp.email >> temp.Balance >> temp.LastTransection >> temp.Rate >> temp.Type >> temp.InitialDate.day;
+		get_acc >> temp.InitialDate.month >> temp.InitialDate.year;
+		get_acc >> temp.MemorableDate.day >> temp.MemorableDate.month >> temp.MemorableDate.year;
+		get_acc >> temp.DateOfBirth.day >> temp.DateOfBirth.month >> temp.DateOfBirth.year;
+		get_acc >> temp.LastTransectionDate.day >> temp.LastTransectionDate.month >> temp.LastTransectionDate.year;
+		if (temp.Rate >= 0.0)
+		{
+			(*vip_acc)++;
+		}
+		else
+		{
+			if (temp.Type == 1)
+				(*savings_acc)++;
+			else if (temp.Type == 2)
+				(*fdr_acc)++;
+			else if (temp.Type == 3)
+				(*buss_acc)++;
+		}
+		(*tot) += temp.Balance;
+	}
+	get_acc.close();
+}
+
+// function to show bank status
+
+void show_bank_status()
+{
+	load();
+	cout << "\n\n";
+	pf('>', 40);
+	cout << "| BANK STATUS |";
+	pf('<', 41);
+	cout << "\n";
+	pf('_', 96);
+	cout << "\n|";
+	pf('_', 36);
+	cout << "| Bank Interest Rate |";
+	pf('_', 36);
+	cout << "|\n";
+	pf('~', 96);
+	cout << "\n\n";
+	cout << "  1) Savings Account       : 6% Simple rate        ~ (No Mature date)\n";
+	cout << "  2) Fixed Deposit Account : 10% Compound rate     ~ (Mature after each 2 years)\n";
+	cout << "  3) Business Account      : No Interest           ~ (Used for business transections)\n";
+	cout << "  4) VIP account           : (0-20)% Compound rate ~ (No Mature date)\n\n";
+	pf('_', 96);
+	cout << "\n|";
+	pf('_', 36);
+	cout << "| Total Amount Stat |";
+	pf('_', 37);
+	cout << "|\n";
+	pf('~', 96);
+	cout << "\n\n";
+	int savings_acc = 0, fdr_acc = 0, buss_acc = 0, vip_acc = 0;
+	long double tot = 0;
+	get_num_of_acc(&savings_acc, &fdr_acc, &buss_acc, &vip_acc, &tot);
+	cout << "  1) Number of Savings Acount        : " << savings_acc << endl;
+	cout << "  2) Number of Fixed Deposit Account : " << fdr_acc << endl;
+	cout << "  3) Number of Business Account      : " << buss_acc << endl;
+	cout << "  4) Number of VIP Account           : " << vip_acc << endl;
+	cout << "     So, In total = " << savings_acc + fdr_acc + buss_acc + vip_acc << " Accounts\n\n";
+	pf('~', 96);
+	ENTER;
+	pf(' ', 49);
+	cout << "Total Reserve Of the Bank : " << fixed << setprecision(2) << tot << "$\n\n\t";
+	cout << "Press '1' to return to the main menu\n\n\t";
+	cout << "Enter your choice :: ";
+	string choice;
+	bool first = 1;
+	do
+	{
+		if (!first)
+		{
+			cout << "\n\tINVALID CHOICE\n\tPress '1' to return to main menu\n";
+			cout << "\tEnter your choice ('1') >>> ";
+		}
+		cin >> choice;
+		cin.ignore(1000, '\n');
+		first = 0;
+	} while (choice != "1");
 }

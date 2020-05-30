@@ -1,0 +1,61 @@
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| BANK STATUS |<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+________________________________________________________________________________________________
+|____________________________________| Bank Interest Rate |____________________________________|
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  1) Savings Account       : 6% Simple rate        ~ (No Mature date)
+  2) Fixed Deposit Account : 10% Compound rate     ~ (Mature after each 2 years)
+  3) Business Account      : No Interest           ~ (Used for business transections)
+  4) VIP account           : (0-20)% Compound rate ~ (No Mature date)  
+________________________________________________________________________________________________
+|____________________________________| Total Account Stat |_____________________________________|
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  1) Savings Acount        : x 
+  2) Fixed Deposit Account : y 
+  3) Business Account      : z 
+  4) VIP Account           : p 
+     So, In total = (total) Accounts
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
+                                                 Total Reserve Of the Bank: x$
+
+Code: 
+cout<<"\n\n";
+pf('>',40);
+cout<<"| BANK STATUS |";
+pf('<',41);
+cout<<"\n";
+pf('_',96);
+cout<<"\n|";
+pf('_',36);
+cout<<"| Bank Interest Rate |";
+pf('_',36);
+cout<<"|\n";
+pf('~',96);
+cout<<"\n\n";
+cout<<"  1) Savings Account       : 6% Simple rate        ~ (No Mature date)\n";
+cout<<"  2) Fixed Deposit Account : 10% Compound rate     ~ (Mature after each 2 years)\n";
+cout<<"  3) Business Account      : No Interest           ~ (Used for business transections)\n";
+cout<<"  4) VIP account           : (0-20)% Compound rate ~ (No Mature date)\n";
+pf('_',96);
+cout<<"\n|";
+pf('_',36);
+cout<<"| Total Amount Stat |";
+pf('_',37);
+cout<<"|\n";
+pf('~',96);
+cout<<"\n\n";
+int savings_acc,fdr_acc,buss_acc,vip_acc,tot;
+get_num_of_acc(*savings_acc,*fdr_acc,*buss_acc,*vip_acc,*tot);
+cout<<"  1) Number of Savings Acount        : "<<savings_acc<<endl;
+cout<<"  2) Number of Fixed Deposit Account : "<<fdr_acc<<endl;
+cout<<"  3) Number of Business Account      : "<<buss_acc<<endl;
+cout<<"  4) Number of VIP Account           : "<<vip_acc<<endl;
+cout<<"     So, In total = "<<savings_acc+fdr_acc+buss_acc+vip_acc<<" Accounts\n\n";
+pf('~',96);
+cout<<"\n";
+pf(' ',49);
+cout<<"Total Reserve Of the Bank : "<<tot<<"$\n"; 
+// press 1 to continue

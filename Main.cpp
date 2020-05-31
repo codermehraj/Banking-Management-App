@@ -123,6 +123,8 @@ void pay_bill_at_this_date(date x, BankAccount temp);
 void pay_bill_initiate_message();
 void show_bank_status();
 void get_num_of_acc(int *savings_acc, int *fdr_acc, int *buss_acc, int *vip_acc, long double *tot);
+void delete_account();
+bool delete_this_acc(BankAccount updated_acc);
 
 /// The main Function
 
@@ -139,6 +141,8 @@ int main()
 			Show_Statement();
 		else if (menu_choice_num == 3)
 			transection();
+		else if (menu_choice_num == 4)
+			delete_account();
 		else if (menu_choice_num == 5)
 			show_bank_status();
 		else if (menu_choice_num == 6)
@@ -265,8 +269,8 @@ again:
 		else if (i == 9)
 		{
 			pf(' ', 4);
-			cout << "4 >>>  Take loan";
-			pf(' ', 54);
+			cout << "4 >>>  Delete Your Account";
+			pf(' ', 44);
 		}
 		else if (i == 10)
 		{
@@ -398,7 +402,8 @@ void ani()
 	}
 	rep(3) ENTER
 		pf("\t\tPress Enter to continue...", 1);
-	getchar();
+	//getchar();
+	cin.ignore(1000, '\n');
 }
 
 /// FUNCTION RELETED TO ANIMATE
@@ -522,7 +527,8 @@ void ani_2()
 	pf("\n", 4);
 	pf("\t", 4);
 	pf("Press enter to continue...", 1);
-	getchar();
+	//getchar();
+	cin.ignore(1000, '\n');
 }
 
 /// INITIATEING LOGO ~ ANIMATION
@@ -549,7 +555,8 @@ void initiate_app_environment()
 	Sleep(300);
 	cout << "\t   "
 		 << "Press enter to continue...";
-	getchar();
+	//getchar();
+	cin.ignore(1000, '\n');
 	load();
 	Hit_with_a_nyx_logo_to_flex_up();
 	load();
@@ -1639,7 +1646,7 @@ void Show_Statement()
 			} while (passwrd != temp.Password);
 			cout << "\n\tCongratulation! Password is matched\n\n\t";
 			cout << "Press enter to continue... ";
-			getchar();
+			cin.ignore(1000, '\n');
 			Show_dashboard(temp);
 			return;
 		}
@@ -2697,4 +2704,174 @@ void show_bank_status()
 		cin.ignore(1000, '\n');
 		first = 0;
 	} while (choice != "1");
+}
+
+// Function to delete a perticuler bank account
+
+bool delete_this_acc(BankAccount updated_acc)
+{
+	ifstream get_acc("root.txt");
+	ofstream make_acc("temp.txt");
+	BankAccount temp;
+	while (!get_acc.eof())
+	{
+		get_acc >> temp.AccountNumber >> temp.Password >> temp.FirstName >> temp.LastName >> temp.NID >> temp.PhoneNumber;
+		get_acc >> temp.email >> temp.Balance >> temp.LastTransection >> temp.Rate >> temp.Type >> temp.InitialDate.day;
+		get_acc >> temp.InitialDate.month >> temp.InitialDate.year;
+		get_acc >> temp.MemorableDate.day >> temp.MemorableDate.month >> temp.MemorableDate.year;
+		get_acc >> temp.DateOfBirth.day >> temp.DateOfBirth.month >> temp.DateOfBirth.year;
+		get_acc >> temp.LastTransectionDate.day >> temp.LastTransectionDate.month >> temp.LastTransectionDate.year;
+		if (temp.AccountNumber == updated_acc.AccountNumber)
+		{
+			continue;
+		}
+		make_acc << '\n'
+				 << temp.AccountNumber << " " << temp.Password << " " << temp.FirstName
+				 << " " << temp.LastName << " " << temp.NID << " " << temp.PhoneNumber;
+		make_acc << " " << temp.email << " " << fixed << setprecision(2) << temp.Balance << " " << temp.LastTransection
+				 << " " << temp.Rate << " " << temp.Type << " " << temp.InitialDate.day << " ";
+		make_acc << temp.InitialDate.month << " " << temp.InitialDate.year << " ";
+		make_acc << temp.MemorableDate.day << " " << temp.MemorableDate.month << " "
+				 << temp.MemorableDate.year << " " << temp.DateOfBirth.day << " " << temp.DateOfBirth.month
+				 << " " << temp.DateOfBirth.year << " " << temp.LastTransectionDate.day << " ";
+		make_acc << temp.LastTransectionDate.month << " " << temp.LastTransectionDate.year;
+	}
+	get_acc.close();
+	make_acc.close();
+	if (remove("root.txt") != 0)
+		return 0;
+	if (rename("temp.txt", "root.txt") != 0)
+		return 0;
+	get_acc.open("index.txt");
+	make_acc.open("temp.txt");
+	string ac_num;
+	while (!get_acc.eof())
+	{
+		get_acc >> ac_num;
+		if (ac_num == updated_acc.AccountNumber)
+		{
+			continue;
+		}
+		make_acc << ac_num << '\n';
+	}
+	get_acc.close();
+	make_acc.close();
+	if (remove("index.txt") != 0)
+		return 0;
+	if (rename("temp.txt", "index.txt") != 0)
+		return 0;
+	return 1;
+}
+
+// Function to delete an account
+
+void delete_account()
+{
+	load();
+	pf('\n', 3);
+	cout << "To delete your account give us the following information\n\n\t";
+	string ac_num;
+	bool starting = 1;
+	do
+	{
+		if (!starting)
+			cout << "\n\tInvalid Account Number\n\t";
+		cout << "Press '1' to return to main menu\n";
+		cout << "\tEnter your Account number ::  ";
+		cin >> ac_num;
+		cin.ignore(1000, '\n');
+		if (ac_num == "1")
+			return;
+		starting = 0;
+	} while (not_found(ac_num));
+	ifstream get_acc("root.txt");
+	BankAccount temp;
+	while (!get_acc.eof())
+	{
+		get_acc >> temp.AccountNumber >> temp.Password >> temp.FirstName >> temp.LastName >> temp.NID >> temp.PhoneNumber;
+		get_acc >> temp.email >> temp.Balance >> temp.LastTransection >> temp.Rate >> temp.Type >> temp.InitialDate.day;
+		get_acc >> temp.InitialDate.month >> temp.InitialDate.year;
+		get_acc >> temp.MemorableDate.day >> temp.MemorableDate.month >> temp.MemorableDate.year;
+		get_acc >> temp.DateOfBirth.day >> temp.DateOfBirth.month >> temp.DateOfBirth.year;
+		get_acc >> temp.LastTransectionDate.day >> temp.LastTransectionDate.month >> temp.LastTransectionDate.year;
+		if (temp.AccountNumber == ac_num)
+		{
+			string passwrd;
+			get_acc.close();
+			cout << "\n\n\tCongratulation!\n\tAccount Number :: | " << ac_num << " | is Found\n\t";
+			cout << "Welcome, " << temp.FirstName << " " << temp.LastName << "\n";
+			cout << "\n\tEnter You Password to get logged in to your account\n";
+			starting = 1;
+			int try_left = 5;
+			do
+			{
+				if (try_left == 0)
+				{
+					cout << "\n\tSORRY! All your tries are gone\n\n\t";
+					cout << "Press Enter to continue...";
+					cin.ignore(1000, '\n');
+					return;
+				}
+				if (!starting)
+					cout << "\tSORRY! Password Didn't Matched\n\tTry Again\n";
+				cout << "\n\tPress '1' to return to the main menu\n\t";
+				cout << "Press '2' to recover your password\n\t";
+				cout << try_left-- << " tries left :)\n";
+				cout << "\n\tEnter your password :: ";
+				cin >> passwrd;
+				cin.ignore(1000, '\n');
+				if (passwrd == "1")
+					return;
+				if (passwrd == "2")
+				{
+					forget_password();
+					return;
+				}
+				starting = 0;
+			} while (passwrd != temp.Password);
+			cout << "\n\tCongratulation! Password is matched\n\n\t";
+			cout << "Press enter to continue... ";
+			cin.ignore(1000, '\n');
+			clr;
+			cout << "\n\n\tARE YOU SURE TO DELETE YOUR ACCOUNT!\n\n\t";
+			cout << "You will get " << temp.Balance << "$ after the deletation\n\n";
+			cout << "\tPress 'Y' to say YES and press 'N' to say NO\n";
+			cout << "\tEnter your choice (Y/N) >>> ";
+			string choice;
+			bool first = 1;
+			do
+			{
+				if (!first)
+				{
+					cout << "\n\tINVALID CHOICE\n\tPress 'Y' to say YES and press 'N' to say NO\n";
+					cout << "\tEnter your choice (Y/N) >>> ";
+				}
+				cin >> choice;
+				if (choice == "1")
+					return;
+				cin.ignore(1000, '\n');
+				if (choice == "y" || choice == "Y" || choice == "YES" || choice == "yes" || choice == "Yes")
+				{
+					if (delete_this_acc(temp))
+					{
+						cout << "\n\tAccount Number - '" << temp.AccountNumber << "' has been deleted successfully\n";
+						cout << "\n\tPress enter to continue... ";
+						cin.ignore(1000, '\n');
+					}
+					else
+					{
+						cout << "\n\tSomething went wrong\n";
+						cout << "\n\tPress enter to continue... ";
+						cin.ignore(1000, '\n');
+					}
+					return;
+				}
+				else if (choice == "n" || choice == "N" || choice == "NO" || choice == "no" || choice == "No")
+				{
+					return;
+				}
+				first = 0;
+			} while (1);
+		}
+	}
 }

@@ -7,7 +7,7 @@ ____________________________________________________________________________
 |6   1 >>>  Open New Account                                               |
 |7   2 >>>  Statement Of Existing Account                                  |
 |8   3 >>>  Transection                                                    |
-|9   4 >>>  Take loan                                                      |
+|9   4 >>>  Delete Your Account                                            |
 |10  5 >>>  Bank Status                                                    |
 |11  6 >>>  Update Your Account Information                                |
 |12  7 >>>  Pay Bill                                                       |

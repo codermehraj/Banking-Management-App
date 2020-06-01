@@ -125,6 +125,7 @@ void show_bank_status();
 void get_num_of_acc(int *savings_acc, int *fdr_acc, int *buss_acc, int *vip_acc, long double *tot);
 void delete_account();
 bool delete_this_acc(BankAccount updated_acc);
+void about();
 
 /// The main Function
 
@@ -149,6 +150,8 @@ int main()
 			edit_user_info();
 		else if (menu_choice_num == 7)
 			pay_bill();
+		else if (menu_choice_num == 8)
+			about();
 		else if (menu_choice_num == 9)
 			break;
 	}
@@ -2874,4 +2877,49 @@ void delete_account()
 			} while (1);
 		}
 	}
+}
+
+// Function to show about the app
+
+void about()
+{
+	load();
+	cout << "\n\n________________________________________| ABOUT THIS APP |_________________________________________";
+	cout << "\n\n\n\tFirst of all, This is a console-based app which I developed using C++ 11.\n";
+	cout << "\tIn This App, one can have the basic functionality of a bank.";
+	cout << "\n\tThis app can create a new bank account by taking the necessary information from the user.";
+	cout << "\n\tThe speciality of this app is that it can handle the exception very well.";
+	cout << "\n\tI tried to make it as interactive and stable as possible.";
+	cout << "\n\tThis app also ensures the security of the users.";
+	cout << "\n\tOne can customize their information at any time using their password.";
+	cout << "\n\tAnd also one can delete their account anytime.\n";
+	cout << "\n\tThis app is also capable of doing transections of several types.";
+	cout << "\n\tIt also has several types of accounts. Those accounts have their unique features.";
+	cout << "\n\tIt also can calculate all the interest and financial calculations needed.";
+	cout << "\n\tIt can show the overall banking information too.";
+	cout << "\n\tOne can also see their statement anytime as they wish.\n";
+	cout << "\n\tHopefully, You will definitely like my app.";
+	cout << "\n\tPlease let me know if you got any bugs or any suggestion to improve the app.";
+	cout << "\n\tI also added all the other information as text files in the GitHub.\n";
+	cout << "\tYou can check those to get detail information.\n";
+	cout << "\n\tThe skills I gained after making this app:\n";
+	cout << "\t- Maintaining Huge codes";
+	cout << "\n\t- File Handling";
+	cout << "\n\t- Exception Handling";
+	cout << "\n\t- Interface Planning";
+	cout << "\n\n\tPress '1' to return to the main menu\n\n\t";
+	cout << "Enter your choice :: ";
+	string choice;
+	bool first = 1;
+	do
+	{
+		if (!first)
+		{
+			cout << "\n\tINVALID CHOICE\n\tPress '1' to return to main menu\n";
+			cout << "\tEnter your choice ('1') >>> ";
+		}
+		cin >> choice;
+		cin.ignore(1000, '\n');
+		first = 0;
+	} while (choice != "1");
 }

@@ -1437,7 +1437,10 @@ void forget_password()
 					cin.ignore(1000, '\n');
 					starter = 0;
 				} while (!valid_send_money(amount_string, &amount, max_amount));
-				if ((long long)amount == temp.LastTransection)
+				long long x = temp.LastTransection;
+				if (x < 0)
+					x *= (-1);
+				if ((long long)amount == x)
 				{
 					cout << "\n\n\tCONGRATULATION! Your authentication is completed\n\n\t";
 					cout << "Now you can change your password\n\n\t";
